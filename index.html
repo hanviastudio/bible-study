@@ -214,6 +214,68 @@ footer b{color:#C9C2B4;font-weight:500}
 .reveal{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
 .reveal.in{opacity:1;transform:none}
 :focus-visible{outline:2px solid currentColor;outline-offset:3px}
+
+/* ===================== v2 visual enhancements ===================== */
+/* per-section accent, auto-contrasted against the field colour */
+.field{--mark:color-mix(in srgb,var(--dot,#E9C46A) 62%,var(--fg))}
+
+/* section header with icon */
+.sec-head{display:flex;align-items:flex-start;gap:clamp(.7rem,2.2vw,1.15rem);margin-bottom:.2rem}
+.sec-ic{flex:none;width:clamp(42px,7.5vw,60px);height:clamp(42px,7.5vw,60px);color:var(--mark)}
+.sec-ic svg{width:100%;height:100%;display:block}
+.sec-head .numeral{margin:0 0 .55rem}
+.numeral{color:var(--mark);opacity:.9}
+
+/* accent on diagram markers */
+.thread-tag i{background:var(--mark)}
+.cl-n,.st i{color:var(--mark);opacity:.95}
+.eq-op,.ff-arrow{color:var(--mark);opacity:.9}
+.cl-tag{color:var(--mark);opacity:.92}
+.ck-mark{color:var(--mark);opacity:1}
+.hinge{border-color:var(--mark)}
+.callout{border-left-color:var(--mark)}
+.ck em{border-left-color:var(--mark)}
+.tl::before{background:var(--mark);opacity:.4}
+.tlx::before{border-color:var(--mark);opacity:.85}
+.tlx::after{background:var(--mark)}
+
+/* tile accent + gentle hover lift */
+.dia .tile{border-top:2px solid color-mix(in srgb,var(--dot,#E9C46A) 46%,transparent)}
+.tile{transition:transform .25s ease,border-color .25s ease,background .25s ease}
+.gt.tile:hover,.cl.tile:hover,.ck.tile:hover,.fk.tile:hover,.gt.tile:focus-within{transform:translateY(-2px);background:rgba(255,255,255,.075)}
+
+/* ===== hero thread-map infographic ===== */
+.tmap{margin:2.6rem 0 .3rem}
+.tmap-t{font-family:var(--mono);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;opacity:.55;margin-bottom:1.3rem}
+.tmap-track{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem}
+.tmap-track::before{content:"";position:absolute;left:10%;right:10%;top:19px;height:2px;
+  background:linear-gradient(90deg,#8FA0E8,#5CBFA6,#E08A6B,#E9C46A,#C9A6E0);opacity:.55;border-radius:2px}
+.tnode{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;
+  text-decoration:none;color:inherit;gap:.55rem;transition:transform .25s ease}
+.tnode:hover{transform:translateY(-3px)}
+.tdot{width:40px;height:40px;border-radius:50%;background:#191b22;border:2px solid var(--dot);color:var(--dot);
+  display:flex;align-items:center;justify-content:center;position:relative;z-index:2;transition:box-shadow .25s ease}
+.tnode:hover .tdot{box-shadow:0 0 0 5px color-mix(in srgb,var(--dot) 22%,transparent)}
+.tdot svg{width:22px;height:22px}
+.tmeta{display:flex;flex-direction:column;align-items:center;gap:.2rem}
+.tnum{font-family:var(--mono);font-size:.57rem;letter-spacing:.14em;opacity:.55}
+.tname{font-family:var(--display);font-weight:500;font-size:clamp(.84rem,2vw,1.04rem);line-height:1.12;color:var(--dot)}
+.tthread{font-size:.72rem;line-height:1.32;opacity:.72;max-width:17ch}
+@media(max-width:640px){
+  .tmap-track{grid-template-columns:1fr;gap:1.1rem}
+  .tmap-track::before{left:19px;right:auto;top:7%;bottom:7%;width:2px;height:auto;
+    background:linear-gradient(180deg,#8FA0E8,#5CBFA6,#E08A6B,#E9C46A,#C9A6E0)}
+  .tnode{flex-direction:row;align-items:center;text-align:left;gap:1rem}
+  .tmeta{align-items:flex-start}
+  .tthread{max-width:none}
+}
+
+/* closing recap: colour node + icon */
+.recap .rc{grid-template-columns:34px 1.7rem 1fr;align-items:center;gap:.85rem}
+.rc.tile{border-left:3px solid var(--mark)}
+.rc .sec-ic{width:32px;height:32px}
+
+@media(prefers-reduced-motion:reduce){.tnode,.tile,.tdot{transition:none!important}}
 </style>
 </head>
 <body>
@@ -553,6 +615,32 @@ var lang = "en";
 var esc = function(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");};
 var L = function(o){ if(!o) return ""; return o[lang] || o.en || ""; };
 
+/* ---------- portrait icons (language-independent) ---------- */
+var ICON = function(id){
+  var P = {
+    god:'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M19.4 4.6l-2.1 2.1M6.7 17.3l-2.1 2.1"/>',
+    creator:'<path d="M12 2c.5 5 2 6.5 7 7-5 .5-6.5 2-7 7-.5-5-2-6.5-7-7 5-.5 6.5-2 7-7z"/>',
+    redeemer:'<path d="M9.5 8H7.5a4 4 0 0 0 0 8h2M14.5 8h2a4 4 0 0 1 0 8h-2M8.5 12h7"/>',
+    king:'<path d="M4 18h16M4 18l-1.2-8.6 4.8 3.5L12 6l4.4 6.9 4.8-3.5L20 18"/>',
+    judge:'<path d="M12 4v16M7 20h10M4.5 7.5h15M12 4l-7.5 3.5M12 4l7.5 3.5M4.5 7.5l-2 4.2a2.6 2.6 0 0 0 4 0zM19.5 7.5l-2 4.2a2.6 2.6 0 0 0 4 0z"/>'
+  };
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(P[id]||'')+'</svg>';
+};
+
+/* ---------- overview infographic: five portraits, one thread ---------- */
+var TMAP_T = {en:"The five portraits — one thread",ko:"다섯 개의 초상 — 하나의 실",zh:"五幅画像 — 一条线索"};
+function threadmap(){
+  var h = '<div class="tmap reveal"><div class="tmap-t">'+esc(L(TMAP_T))+'</div><div class="tmap-track">';
+  D.sections.forEach(function(s){
+    h += '<a class="tnode" href="#'+s.id+'" style="--dot:'+s.dot+'">'
+       + '<span class="tdot">'+ICON(s.id)+'</span>'
+       + '<div class="tmeta"><span class="tnum">'+s.numeral+'</span>'
+       + '<span class="tname">'+esc(L(s.title))+'</span>'
+       + '<span class="tthread">'+esc(L(s.thread))+'</span></div></a>';
+  });
+  return h + '</div></div>';
+}
+
 /* ---------- verse accordion ---------- */
 function scripture(ids){
   var h = '<p class="hint">'+esc(L(D.ui.tapHint))+'</p><div class="scripture">';
@@ -647,20 +735,20 @@ var DIA = {
 };
 
 function block(b){
-  if(b.t==="p") return '<p>'+esc(L(b.x))+'</p>';
-  if(b.t==="h") return '<h3>'+esc(L(b.x))+'</h3>';
-  if(b.t==="callout") return '<div class="callout">'+esc(L(b.x))+'</div>';
-  if(b.t==="s") return scripture(b.v);
+  if(b.t==="p") return '<p class="reveal">'+esc(L(b.x))+'</p>';
+  if(b.t==="h") return '<h3 class="reveal">'+esc(L(b.x))+'</h3>';
+  if(b.t==="callout") return '<div class="callout reveal">'+esc(L(b.x))+'</div>';
+  if(b.t==="s") return '<div class="reveal">'+scripture(b.v)+'</div>';
   if(b.t==="dia"){
     var t = b.title ? '<div class="dia-t">'+esc(L(b.title))+'</div>' : '';
     return '<div class="dia reveal">'+t+(DIA[b.kind]?DIA[b.kind](b):'')+'</div>';
   }
   if(b.t==="mem"){
     var v = D.verses[b.ref];
-    return '<div class="memory"><div class="hint">'+esc(L(D.ui.memory))+'</div><q>'+esc(L(v.t))+'</q><cite>'+esc(L(v.ref))+'</cite></div>';
+    return '<div class="memory reveal"><div class="hint">'+esc(L(D.ui.memory))+'</div><q>'+esc(L(v.t))+'</q><cite>'+esc(L(v.ref))+'</cite></div>';
   }
   if(b.t==="q"){
-    var h='<h3>'+esc(L(D.ui.questions))+'</h3><ul class="qs">';
+    var h='<h3 class="reveal">'+esc(L(D.ui.questions))+'</h3><ul class="qs">';
     b.items.forEach(function(q){ h+='<li>'+esc(L(q))+'</li>'; });
     return h+'</ul>';
   }
@@ -674,7 +762,7 @@ function render(){
 
   var h = '';
   /* hero */
-  h += '<section class="field" id="top" style="--field:#14161C;--fg:#F2EFE7">'
+  h += '<section class="field" id="top" style="--field:#14161C;--fg:#F2EFE7;--dot:#E9C46A">'
      + '<div class="wrap">'
      + '<p class="eyebrow">'+esc(L(D.hero.eyebrow))+'</p>'
      + '<div style="font-family:var(--display);font-weight:300;font-size:clamp(1.1rem,3.2vw,1.6rem);opacity:.5;letter-spacing:.02em;margin-bottom:1.6rem">'+D.hero.greek+'</div>'
@@ -683,15 +771,17 @@ function render(){
      + '<hr class="hairline">'
      + '<p style="max-width:56ch">'+esc(L(D.hero.intro))+'</p>'
      + scripture(["mt16_15"])
+     + threadmap()
      + '</div></section>';
 
   /* sections */
   D.sections.forEach(function(s){
-    h += '<section class="field" id="'+s.id+'" style="--field:'+s.field+';--fg:'+s.fg+'"><div class="wrap">'
-       + '<span class="numeral">'+s.numeral+'</span>'
-       + '<div class="thread-tag"><i></i>'+esc(L(s.thread))+'</div>'
-       + '<h2>'+esc(L(s.title))+'</h2>'
-       + '<p class="lead">'+esc(L(s.lead))+'</p>'
+    h += '<section class="field" id="'+s.id+'" style="--field:'+s.field+';--fg:'+s.fg+';--dot:'+s.dot+'"><div class="wrap">'
+       + '<div class="sec-head reveal"><span class="sec-ic">'+ICON(s.id)+'</span>'
+       + '<div><span class="numeral">'+s.numeral+'</span>'
+       + '<div class="thread-tag"><i></i>'+esc(L(s.thread))+'</div></div></div>'
+       + '<h2 class="reveal">'+esc(L(s.title))+'</h2>'
+       + '<p class="lead reveal">'+esc(L(s.lead))+'</p>'
        + '<hr class="hairline">';
     s.blocks.forEach(function(b){ h += block(b); });
     h += '</div></section>';
@@ -704,8 +794,9 @@ function render(){
      + '<h2>'+esc(L(c.title))+'</h2>'
      + '<p class="lead">'+esc(L(c.lead))+'</p>'
      + '<hr class="hairline"><div class="recap">';
-  c.rows.forEach(function(r){
-    h += '<div class="rc tile"><i>'+r.n+'</i><div><b>'+esc(L(r.b))+'</b><span>'+esc(L(r.s))+'</span><em>'+esc(L(r.e))+'</em></div></div>';
+  c.rows.forEach(function(r,i){
+    var sec = D.sections[i] || {};
+    h += '<div class="rc tile reveal" style="--mark:'+(sec.field||'#555')+'"><span class="sec-ic">'+ICON(sec.id)+'</span><i>'+r.n+'</i><div><b>'+esc(L(r.b))+'</b><span>'+esc(L(r.s))+'</span><em>'+esc(L(r.e))+'</em></div></div>';
   });
   h += '</div><div class="callout">'+esc(L(c.final))+'</div>'
      + '<h3>'+esc(L(D.ui.questions))+'</h3><ul class="qs">';

@@ -5,7 +5,17 @@
       "Bash(git mv *)",
       "Bash(mv who-is-jesus.html index.html)",
       "Bash(git add *)",
-      "Bash(git commit -m 'Initial commit: add index.html *)"
+      "Bash(git commit -m 'Initial commit: add index.html *)",
+      "Bash(git config *)",
+      "Bash(git commit *)",
+      "Bash(gh auth *)",
+      "Read(//opt/homebrew/bin/**)",
+      "Read(//Users/hanvia/.nvm/versions/**)",
+      "Read(//opt/homebrew/**)",
+      "Bash(sw_vers)",
+      "Bash(mkdir -p ~/.local/bin ~/.local/opt)",
+      "Bash(curl -fsSL -o /dev/null -w '%{url_effective}\\\\n' https://github.com/cli/cli/releases/latest)",
+      "Bash(curl -fsSL https://nodejs.org/dist/index.json)"
     ]
   }
 }
