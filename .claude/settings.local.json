@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init *)",
+      "Bash(git mv *)",
+      "Bash(mv who-is-jesus.html index.html)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'Initial commit: add index.html *)"
+    ]
+  }
+}

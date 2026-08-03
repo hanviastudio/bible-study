@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Is Jesus? — Five Portraits, One Word</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,700&family=Figtree:wght@300;400;500;600&family=Space+Mono:wght@400;700&family=Noto+Sans+KR:wght@300;400;600&family=Noto+Sans+SC:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F1E9DA;
+  --ink:#17161A;
+  --display:"Fraunces",Georgia,serif;
+  --body:"Figtree","Noto Sans KR","Noto Sans SC",system-ui,sans-serif;
+  --mono:"Space Mono","Noto Sans KR",monospace;
+  --wide:min(880px,100% - 2.5rem);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--ink);color:var(--paper);
+  font-family:var(--body);font-weight:300;font-size:17px;line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+
+/* ---------- top bar ---------- */
+.bar{
+  position:fixed;top:0;left:0;right:0;z-index:60;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:.55rem clamp(.9rem,3vw,1.6rem);
+  background:rgba(14,14,18,.78);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(241,233,218,.13);
+}
+.brand{font-family:var(--mono);font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:#C9C2B4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.langs{display:flex;gap:.25rem;flex:none}
+.langs button{
+  font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;
+  background:transparent;color:#9A9384;border:1px solid rgba(241,233,218,.2);
+  padding:.34rem .6rem;border-radius:2px;cursor:pointer;transition:.18s;
+}
+.langs button:hover{color:#F1E9DA;border-color:rgba(241,233,218,.5)}
+.langs button[aria-pressed="true"]{background:#F1E9DA;color:#17161A;border-color:#F1E9DA;font-weight:700}
+.bar-progress{position:absolute;left:0;bottom:-1px;height:2px;background:currentColor;width:0;color:#E9C46A;transition:width .12s linear}
+
+/* ---------- left thread rail (the signature) ---------- */
+.rail{position:fixed;left:24px;top:50%;transform:translateY(-50%);z-index:50;display:none}
+@media(min-width:1180px){.rail{display:block}}
+.rail ol{list-style:none;margin:0;padding:0;position:relative}
+.rail ol::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:rgba(241,233,218,.22)}
+.rail li{position:relative;padding:0 0 26px 24px;min-height:11px}
+.rail li:last-child{padding-bottom:0}
+.rail a{display:block;text-decoration:none;color:rgba(241,233,218,.42);font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;transition:.22s}
+.rail li::before{content:"";position:absolute;left:0;top:5px;width:11px;height:11px;border-radius:50%;border:1px solid rgba(241,233,218,.35);background:#17161A;transition:.25s}
+.rail li[data-on="1"]::before{background:var(--dot);border-color:var(--dot);transform:scale(1.25)}
+.rail li[data-on="1"] a{color:#F1E9DA}
+
+/* ---------- sections ---------- */
+main{padding-top:0}
+.field{
+  background:var(--field);color:var(--fg);
+  padding:clamp(4.5rem,11vw,8rem) 0 clamp(4.5rem,11vw,8rem);
+  position:relative;overflow:hidden;
+}
+.wrap{width:var(--wide);margin:0 auto;position:relative;z-index:2}
+.eyebrow{font-family:var(--mono);font-size:.68rem;letter-spacing:.26em;text-transform:uppercase;opacity:.62;margin:0 0 1.1rem}
+h1{font-family:var(--display);font-weight:300;font-size:clamp(3rem,10.5vw,6.4rem);line-height:.94;margin:0 0 1.4rem;letter-spacing:-.02em}
+h2{font-family:var(--display);font-weight:300;font-size:clamp(2.3rem,7vw,4.1rem);line-height:1.0;margin:.2rem 0 1rem;letter-spacing:-.02em}
+h3{font-family:var(--display);font-weight:500;font-size:clamp(1.15rem,3vw,1.4rem);line-height:1.25;margin:2.8rem 0 .9rem;letter-spacing:-.01em}
+p{margin:0 0 1.15rem;max-width:64ch}
+.lead{font-family:var(--display);font-weight:300;font-size:clamp(1.25rem,3.4vw,1.62rem);line-height:1.5;opacity:.95;max-width:32ch}
+.thread-tag{
+  display:inline-flex;align-items:center;gap:.6rem;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
+  border:1px solid currentColor;border-radius:999px;padding:.4rem .95rem;opacity:.85;margin-bottom:2.2rem;
+}
+.thread-tag i{width:6px;height:6px;border-radius:50%;background:currentColor;font-style:normal}
+.numeral{font-family:var(--display);font-weight:300;font-size:.95rem;letter-spacing:.3em;opacity:.55;display:block;margin-bottom:.4rem}
+.hairline{height:1px;background:currentColor;opacity:.22;margin:2.6rem 0;border:0}
+
+/* ---------- scripture accordion ---------- */
+.scripture{margin:1.6rem 0 1.9rem;border-top:1px solid rgba(127,127,127,.28)}
+.sv{border-bottom:1px solid rgba(127,127,127,.28)}
+.sv>button{
+  width:100%;display:flex;align-items:center;gap:.85rem;text-align:left;
+  background:none;border:0;cursor:pointer;color:inherit;
+  padding:.78rem .2rem;font-family:var(--mono);font-size:.78rem;letter-spacing:.04em;
+}
+.sv>button:hover .sv-ref{opacity:1}
+.sv-ref{opacity:.82;flex:1}
+.sv-plus{
+  flex:none;width:17px;height:17px;position:relative;opacity:.6;transition:.25s;
+}
+.sv-plus::before,.sv-plus::after{content:"";position:absolute;background:currentColor;left:50%;top:50%}
+.sv-plus::before{width:11px;height:1px;transform:translate(-50%,-50%)}
+.sv-plus::after{width:1px;height:11px;transform:translate(-50%,-50%);transition:.25s}
+.sv[data-open="1"] .sv-plus::after{transform:translate(-50%,-50%) scaleY(0)}
+.sv[data-open="1"] .sv-plus{opacity:1}
+.sv-body{max-height:0;overflow:hidden;transition:max-height .34s cubic-bezier(.4,0,.2,1)}
+.sv-text{
+  font-family:var(--display);font-weight:300;font-size:1.09rem;line-height:1.62;
+  padding:.1rem 0 1.1rem 0;max-width:60ch;
+}
+.sv-text::before{content:"";display:block;width:26px;height:2px;background:currentColor;opacity:.4;margin-bottom:.85rem}
+.sv-src{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;opacity:.45;margin-top:.5rem}
+.hint{font-family:var(--mono);font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;opacity:.45;margin:.2rem 0 .5rem}
+
+/* ---------- diagrams ---------- */
+.dia{margin:2.2rem 0 2.4rem}
+.dia-t{font-family:var(--mono);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;opacity:.6;margin-bottom:1.1rem}
+.tile{border:1px solid rgba(127,127,127,.34);background:rgba(255,255,255,.045)}
+
+/* clauses */
+.clauses{display:grid;gap:.6rem}
+.cl{display:grid;grid-template-columns:auto 1fr;gap:1rem;padding:1rem 1.1rem;align-items:start}
+.cl-n{font-family:var(--mono);font-size:.72rem;opacity:.5;padding-top:.2rem}
+.cl-q{font-family:var(--display);font-size:1.12rem;line-height:1.35;margin-bottom:.35rem}
+.cl-a{font-size:.93rem;opacity:.82;margin:0}
+.cl-tag{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;opacity:.6;margin-top:.5rem;display:block}
+
+/* grid tiles */
+.gridtiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.55rem}
+.gt{padding:.95rem 1rem}
+.gt b{font-family:var(--display);font-weight:500;font-size:1.02rem;display:block;margin-bottom:.28rem}
+.gt span{font-size:.85rem;opacity:.78;display:block}
+.gt em{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;font-style:normal;opacity:.55;display:block;margin-top:.5rem}
+
+/* form & fill */
+.ff{display:grid;grid-template-columns:1fr auto 1fr;gap:.5rem;align-items:stretch}
+@media(max-width:640px){.ff{grid-template-columns:1fr;}.ff-arrow{display:none}}
+.ff-col{display:grid;gap:.5rem}
+.ff-head{font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;opacity:.6;padding-bottom:.35rem}
+.ff-cell{padding:.75rem .85rem}
+.ff-cell b{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;display:block;opacity:.6;margin-bottom:.2rem}
+.ff-cell span{font-size:.92rem}
+.ff-arrow{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.9rem;opacity:.4;padding:0 .2rem}
+.ff-rest{margin-top:.5rem;padding:.8rem .95rem;text-align:center;font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+
+/* equation */
+.eq{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:.4rem;align-items:center;text-align:center}
+@media(max-width:680px){.eq{grid-template-columns:1fr;}.eq-op{padding:.15rem 0}}
+.eq-term{padding:1.1rem .8rem}
+.eq-term b{font-family:var(--display);font-weight:500;font-size:1.05rem;display:block;margin-bottom:.3rem}
+.eq-term span{font-size:.84rem;opacity:.78}
+.eq-op{font-family:var(--display);font-size:1.5rem;opacity:.5}
+
+/* checklist */
+.chk{display:grid;gap:.5rem}
+.ck{display:grid;grid-template-columns:auto 1fr;gap:.9rem;padding:.95rem 1.05rem}
+.ck-mark{font-family:var(--mono);font-size:.9rem;opacity:.75;padding-top:.1rem}
+.ck b{font-family:var(--display);font-weight:500;font-size:1.04rem;display:block;margin-bottom:.25rem}
+.ck span{font-size:.9rem;opacity:.8;display:block}
+.ck em{font-style:normal;display:block;margin-top:.45rem;font-size:.86rem;opacity:.95;border-left:2px solid currentColor;padding-left:.7rem}
+
+/* compare */
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.cmp-head{padding:.8rem .9rem;font-family:var(--display);font-weight:500;font-size:1.05rem}
+.cmp-head small{display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;opacity:.6;font-weight:400;margin-top:.2rem}
+.cmp-row{padding:.7rem .9rem;font-size:.9rem}
+.cmp-label{grid-column:1/-1;font-family:var(--mono);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;opacity:.5;padding:.7rem .1rem .1rem}
+
+/* stairway */
+.stair{display:grid;gap:.32rem}
+.st{padding:.62rem .9rem;font-size:.92rem;display:flex;gap:.75rem;align-items:baseline}
+.st i{font-family:var(--mono);font-size:.62rem;font-style:normal;opacity:.5;flex:none}
+.hinge{
+  margin:.55rem 0;padding:.75rem 1rem;text-align:center;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+  border-top:1px solid currentColor;border-bottom:1px solid currentColor;opacity:.9;
+}
+
+/* timeline */
+.tl{position:relative;padding-left:2.1rem}
+.tl::before{content:"";position:absolute;left:8px;top:10px;bottom:10px;width:1px;background:currentColor;opacity:.3}
+.tlx{position:relative;margin-bottom:1.35rem}
+.tlx::before{content:"";position:absolute;left:-2.1rem;top:6px;width:17px;height:17px;border-radius:50%;border:1px solid currentColor;background:var(--field);opacity:.85}
+.tlx::after{content:"";position:absolute;left:calc(-2.1rem + 6px);top:12px;width:5px;height:5px;border-radius:50%;background:currentColor}
+.tlx b{font-family:var(--display);font-weight:500;font-size:1.06rem;display:block;margin-bottom:.15rem}
+.tlx span{font-size:.9rem;opacity:.82}
+.tlx em{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;font-style:normal;opacity:.55;display:block;margin-top:.35rem}
+
+/* fork */
+.fork{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+@media(max-width:600px){.fork,.cmp{grid-template-columns:1fr}}
+.fk{padding:1.1rem 1.05rem}
+.fk b{font-family:var(--display);font-weight:500;font-size:1.14rem;display:block;margin-bottom:.4rem}
+.fk span{font-size:.9rem;opacity:.82}
+.fk em{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;font-style:normal;opacity:.55;display:block;margin-top:.6rem}
+.fork-stem{text-align:center;padding:.9rem;font-family:var(--display);font-size:1.05rem;opacity:.9;margin-bottom:.5rem}
+
+/* callout + memory + questions */
+.callout{border-left:2px solid currentColor;padding:.3rem 0 .3rem 1.15rem;margin:2rem 0;font-family:var(--display);font-weight:300;font-size:1.18rem;line-height:1.5;max-width:46ch}
+.memory{margin:2.6rem 0 1rem;padding:1.4rem 1.35rem;border:1px dashed rgba(127,127,127,.5)}
+.memory .hint{margin-bottom:.6rem}
+.memory q{font-family:var(--display);font-size:1.15rem;line-height:1.5;quotes:none}
+.memory cite{display:block;font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;font-style:normal;opacity:.6;margin-top:.7rem}
+.qs{margin:2rem 0 0;padding:0;list-style:none;counter-reset:q}
+.qs li{counter-increment:q;position:relative;padding-left:2.1rem;margin-bottom:.85rem;font-size:.98rem;max-width:58ch}
+.qs li::before{content:counter(q,decimal-leading-zero);position:absolute;left:0;top:.15rem;font-family:var(--mono);font-size:.68rem;opacity:.5}
+
+/* recap */
+.recap{display:grid;gap:.4rem}
+.rc{display:grid;grid-template-columns:2.2rem 1fr;gap:.9rem;padding:.9rem 1rem;align-items:baseline}
+.rc i{font-family:var(--display);font-style:normal;opacity:.45;font-size:.9rem;letter-spacing:.12em}
+.rc b{font-family:var(--display);font-weight:500;font-size:1.08rem;display:block}
+.rc span{font-size:.92rem;opacity:.8;display:block;margin-top:.15rem}
+.rc em{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;font-style:normal;opacity:.55;display:block;margin-top:.35rem}
+
+footer{padding:3rem 0 4rem;background:#0E0E12;color:#8B8578}
+footer .wrap{font-size:.8rem;line-height:1.7}
+footer b{color:#C9C2B4;font-weight:500}
+
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="brand" id="brand">Who Is Jesus? — Five Portraits, One Word</div>
+  <nav class="langs" aria-label="Language">
+    <button data-lang="en" aria-pressed="true">EN</button>
+    <button data-lang="ko" aria-pressed="false">한국어</button>
+    <button data-lang="zh" aria-pressed="false">中文</button>
+  </nav>
+  <div class="bar-progress" id="prog"></div>
+</header>
+
+<nav class="rail" aria-label="Sections"><ol id="rail"></ol></nav>
+
+<main id="app"></main>
+
+<footer><div class="wrap" id="foot"></div></footer>
+
+<script type="application/json" id="DATA">
+{
+"ui":{
+  "brand":{"en":"Who Is Jesus? — Five Portraits, One Word","ko":"예수는 누구신가 — 다섯 초상, 하나의 말씀","zh":"耶稣是谁 — 五幅画像，一个道"},
+  "tapHint":{"en":"Tap a reference to open the text","ko":"성경 구절을 누르면 본문이 열립니다","zh":"点击经文出处即可展开原文"},
+  "memory":{"en":"Memory verse","ko":"암송 구절","zh":"背诵经文"},
+  "questions":{"en":"For discussion","ko":"함께 나눌 질문","zh":"讨论问题"},
+  "footer":{
+    "en":"Scripture text shown here is the World English Bible (public domain), with Korean and Chinese renderings prepared for this study. Replace the verse texts in the data block with your preferred translation for classroom use. Structure inspired by the visual-theology approach of The Bible Project.",
+    "ko":"여기 실린 영어 본문은 저작권이 만료된 World English Bible이며, 한국어·중국어 본문은 이 교재를 위해 준비한 번역입니다. 수업에서 특정 역본(예: NIV, 개역개정)을 쓰시려면 데이터 블록의 본문만 바꾸시면 됩니다. 구성은 The Bible Project의 시각 신학 방식을 참고했습니다.",
+    "zh":"此处英文经文取自公有领域的 World English Bible，中韩文经文为本教材所备之译文。如需使用特定译本，只需替换数据区中的经文文本。结构参考 The Bible Project 的视觉神学方法。"
+  }
+},
+
+"verses":{
+ "mt16_15":{"ref":{"en":"Matthew 16:15–16","ko":"마태복음 16:15–16","zh":"马太福音 16:15–16"},"t":{"en":"He said to them, “But who do you say that I am?” Simon Peter answered, “You are the Christ, the Son of the living God.”","ko":"예수께서 이르시되 “너희는 나를 누구라 하느냐?” 시몬 베드로가 대답하되 “주는 그리스도시요 살아 계신 하나님의 아들이시니이다.”","zh":"耶稣说：“你们说我是谁？”西门彼得回答说：“你是基督，是永生神的儿子。”"}},
+ "jn1_1":{"ref":{"en":"John 1:1","ko":"요한복음 1:1","zh":"约翰福音 1:1"},"t":{"en":"In the beginning was the Word, and the Word was with God, and the Word was God.","ko":"태초에 말씀이 계시니라. 이 말씀이 하나님과 함께 계셨으니 이 말씀은 곧 하나님이시니라.","zh":"太初有道，道与神同在，道就是神。"}},
+ "jn1_2":{"ref":{"en":"John 1:2–3","ko":"요한복음 1:2–3","zh":"约翰福音 1:2–3"},"t":{"en":"The same was in the beginning with God. All things were made through him. Without him, nothing was made that has been made.","ko":"그가 태초에 하나님과 함께 계셨고, 만물이 그로 말미암아 지은 바 되었으니 지은 것이 하나도 그가 없이는 된 것이 없느니라.","zh":"这道太初与神同在。万物是借着他造的；凡被造的，没有一样不是借着他造的。"}},
+ "jn1_14":{"ref":{"en":"John 1:14","ko":"요한복음 1:14","zh":"约翰福音 1:14"},"t":{"en":"The Word became flesh and lived among us. We saw his glory, such glory as of the one and only Son of the Father, full of grace and truth.","ko":"말씀이 육신이 되어 우리 가운데 거하시매, 우리가 그의 영광을 보니 아버지의 독생자의 영광이요 은혜와 진리가 충만하더라.","zh":"道成了肉身，住在我们中间，充充满满地有恩典有真理。我们也见过他的荣光，正是父独生子的荣光。"}},
+ "jn8_58":{"ref":{"en":"John 8:58","ko":"요한복음 8:58","zh":"约翰福音 8:58"},"t":{"en":"Jesus said to them, “Most certainly, I tell you, before Abraham came into existence, I AM.”","ko":"예수께서 이르시되 “진실로 진실로 너희에게 이르노니 아브라함이 나기 전부터 내가 있느니라.”","zh":"耶稣说：“我实实在在地告诉你们，还没有亚伯拉罕就有了我。”"}},
+ "ex3_14":{"ref":{"en":"Exodus 3:14","ko":"출애굽기 3:14","zh":"出埃及记 3:14"},"t":{"en":"God said to Moses, “I AM WHO I AM,” and he said, “You shall tell the children of Israel this: ‘I AM has sent me to you.’”","ko":"하나님이 모세에게 이르시되 “나는 스스로 있는 자이니라” 하시고 “너는 이스라엘 자손에게 이같이 이르기를 ‘스스로 있는 자가 나를 너희에게 보내셨다’ 하라” 하시니라.","zh":"神对摩西说：“我是自有永有的。”又说：“你要对以色列人这样说：‘那自有的打发我到你们这里来。’”"}},
+ "jn20_28":{"ref":{"en":"John 20:28","ko":"요한복음 20:28","zh":"约翰福音 20:28"},"t":{"en":"Thomas answered him, “My Lord and my God!”","ko":"도마가 대답하여 이르되 “나의 주님이시요 나의 하나님이시니이다.”","zh":"多马说：“我的主！我的神！”"}},
+ "col2_9":{"ref":{"en":"Colossians 2:9","ko":"골로새서 2:9","zh":"歌罗西书 2:9"},"t":{"en":"For in him all the fullness of the Deity dwells bodily.","ko":"그 안에는 신성의 모든 충만이 육체로 거하시고,","zh":"因为神本性一切的丰盛，都有形有体地居住在基督里面。"}},
+ "heb1_3":{"ref":{"en":"Hebrews 1:3","ko":"히브리서 1:3","zh":"希伯来书 1:3"},"t":{"en":"His Son is the radiance of his glory, the very image of his substance, and upholding all things by the word of his power.","ko":"이는 하나님의 영광의 광채시요 그 본체의 형상이시라. 그의 능력의 말씀으로 만물을 붙드시며,","zh":"他是神荣耀所发的光辉，是神本体的真像，常用他权能的命令托住万有。"}},
+ "heb13_8":{"ref":{"en":"Hebrews 13:8","ko":"히브리서 13:8","zh":"希伯来书 13:8"},"t":{"en":"Jesus Christ is the same yesterday, today, and forever.","ko":"예수 그리스도는 어제나 오늘이나 영원토록 동일하시니라.","zh":"耶稣基督昨日、今日、一直到永远，是一样的。"}},
+ "rev1_8":{"ref":{"en":"Revelation 1:8","ko":"요한계시록 1:8","zh":"启示录 1:8"},"t":{"en":"“I am the Alpha and the Omega,” says the Lord God, “who is and who was and who is to come, the Almighty.”","ko":"주 하나님이 이르시되 “나는 알파와 오메가라. 이제도 있고 전에도 있었고 장차 올 자요 전능한 자라” 하시더라.","zh":"主神说：“我是阿拉法，我是俄梅戛，是昔在、今在、以后永在的全能者。”"}},
+ "mt28_18":{"ref":{"en":"Matthew 28:18, 20","ko":"마태복음 28:18, 20","zh":"马太福音 28:18, 20"},"t":{"en":"Jesus came to them and spoke to them, saying, “All authority has been given to me in heaven and on earth.” … “Behold, I am with you always, even to the end of the age.”","ko":"예수께서 나아와 말씀하여 이르시되 “하늘과 땅의 모든 권세를 내게 주셨으니 … 볼지어다, 내가 세상 끝날까지 너희와 항상 함께 있으리라.”","zh":"耶稣进前来，对他们说：“天上地下所有的权柄都赐给我了。……我就常与你们同在，直到世界的末了。”"}},
+ "jn2_24":{"ref":{"en":"John 2:24–25","ko":"요한복음 2:24–25","zh":"约翰福音 2:24–25"},"t":{"en":"But Jesus didn’t entrust himself to them, because he knew everyone, and because he didn’t need for anyone to testify concerning man; for he himself knew what was in man.","ko":"예수는 그 몸을 그들에게 의탁하지 아니하셨으니 이는 친히 모든 사람을 아심이요, 또 사람에 대하여 누구의 증언도 받으실 필요가 없었음이니 이는 그가 친히 사람의 속에 있는 것을 아셨음이니라.","zh":"耶稣却不将自己交托他们，因为他知道万人；也用不着谁见证人怎样，因他知道人心里所存的。"}},
+ "1jn4_8":{"ref":{"en":"1 John 4:8 · John 15:13","ko":"요한일서 4:8 · 요한복음 15:13","zh":"约翰一书 4:8 · 约翰福音 15:13"},"t":{"en":"He who doesn’t love doesn’t know God, for God is love. … Greater love has no one than this, that someone lay down his life for his friends.","ko":"사랑하지 아니하는 자는 하나님을 알지 못하나니 이는 하나님은 사랑이심이라. … 사람이 친구를 위하여 자기 목숨을 버리면 이보다 더 큰 사랑이 없나니.","zh":"没有爱心的，就不认识神，因为神就是爱。……人为朋友舍命，人的爱心没有比这个大的。"}},
+ "isa6_3":{"ref":{"en":"Isaiah 6:3 · John 6:69","ko":"이사야 6:3 · 요한복음 6:69","zh":"以赛亚书 6:3 · 约翰福音 6:69"},"t":{"en":"“Holy, holy, holy is Yahweh of Armies! The whole earth is full of his glory!” … “We have come to believe and know that you are the Holy One of God.”","ko":"“거룩하다, 거룩하다, 거룩하다 만군의 여호와여, 그의 영광이 온 땅에 충만하도다.” … “우리가 주는 하나님의 거룩하신 자이신 줄 믿고 알았사옵나이다.”","zh":"“圣哉！圣哉！圣哉！万军之耶和华，他的荣光充满全地！”……“我们已经信了，又知道你是神的圣者。”"}},
+ "jn17_5":{"ref":{"en":"John 17:5","ko":"요한복음 17:5","zh":"约翰福音 17:5"},"t":{"en":"Now, Father, glorify me with your own self with the glory which I had with you before the world existed.","ko":"아버지여, 창세 전에 내가 아버지와 함께 가졌던 영광으로써 지금도 아버지와 함께 나를 영화롭게 하옵소서.","zh":"父啊，现在求你使我同你享荣耀，就是未有世界以先，我同你所有的荣耀。"}},
+ "gen1_1":{"ref":{"en":"Genesis 1:1, 3","ko":"창세기 1:1, 3","zh":"创世记 1:1, 3"},"t":{"en":"In the beginning, God created the heavens and the earth. … God said, “Let there be light,” and there was light.","ko":"태초에 하나님이 천지를 창조하시니라. … 하나님이 이르시되 “빛이 있으라” 하시니 빛이 있었고,","zh":"起初，神创造天地。……神说：“要有光”，就有了光。"}},
+ "ps33_6":{"ref":{"en":"Psalm 33:6, 9","ko":"시편 33:6, 9","zh":"诗篇 33:6, 9"},"t":{"en":"By Yahweh’s word the heavens were made, all their army by the breath of his mouth. … For he spoke, and it was done. He commanded, and it stood firm.","ko":"여호와의 말씀으로 하늘이 지음이 되었으며 그 만상을 그의 입 기운으로 이루었도다. … 그가 말씀하시매 이루어졌으며 명령하시매 견고히 섰도다.","zh":"诸天借耶和华的命而造，万象借他口中的气而成。……因为他说有，就有；命立，就立。"}},
+ "heb11_3":{"ref":{"en":"Hebrews 11:3","ko":"히브리서 11:3","zh":"希伯来书 11:3"},"t":{"en":"By faith we understand that the universe has been framed by the word of God, so that what is seen has not been made out of things which are visible.","ko":"믿음으로 모든 세계가 하나님의 말씀으로 지어진 줄을 우리가 아나니, 보이는 것은 나타난 것으로 말미암아 된 것이 아니니라.","zh":"我们因着信，就知道诸世界是借神的话造成的；这样，所看见的，并不是从显然之物造出来的。"}},
+ "col1_16":{"ref":{"en":"Colossians 1:16–17","ko":"골로새서 1:16–17","zh":"歌罗西书 1:16–17"},"t":{"en":"For by him all things were created in the heavens and on the earth, visible things and invisible things. All things have been created through him and for him. He is before all things, and in him all things are held together.","ko":"만물이 그에게서 창조되되 하늘과 땅에서 보이는 것들과 보이지 않는 것들이 다 그로 말미암고 그를 위하여 창조되었고, 또한 그가 만물보다 먼저 계시고 만물이 그 안에 함께 섰느니라.","zh":"因为万有都是靠他造的，无论是天上的、地上的，能看见的、不能看见的……一概都是借着他造的，又是为他造的。他在万有之先，万有也靠他而立。"}},
+ "gen1_26":{"ref":{"en":"Genesis 1:26–27","ko":"창세기 1:26–27","zh":"创世记 1:26–27"},"t":{"en":"God said, “Let’s make man in our image, after our likeness.” … God created man in his own image. In God’s image he created him; male and female he created them.","ko":"하나님이 이르시되 “우리의 형상을 따라 우리의 모양대로 우리가 사람을 만들고” … 하나님이 자기 형상 곧 하나님의 형상대로 사람을 창조하시되 남자와 여자를 창조하시고,","zh":"神说：“我们要照着我们的形像、按着我们的样式造人。”……神就照着自己的形像造人，乃是照着他的形像造男造女。"}},
+ "gen2_7":{"ref":{"en":"Genesis 2:7","ko":"창세기 2:7","zh":"创世记 2:7"},"t":{"en":"Yahweh God formed man from the dust of the ground, and breathed into his nostrils the breath of life; and man became a living soul.","ko":"여호와 하나님이 땅의 흙으로 사람을 지으시고 생기를 그 코에 불어넣으시니 사람이 생령이 되니라.","zh":"耶和华神用地上的尘土造人，将生气吹在他鼻孔里，他就成了有灵的活人。"}},
+ "1th5_23":{"ref":{"en":"1 Thessalonians 5:23","ko":"데살로니가전서 5:23","zh":"帖撒罗尼迦前书 5:23"},"t":{"en":"May your whole spirit, soul, and body be preserved blameless at the coming of our Lord Jesus Christ.","ko":"너희의 온 영과 혼과 몸이 우리 주 예수 그리스도께서 강림하실 때에 흠 없게 보전되기를 원하노라.","zh":"又愿你们的灵与魂与身子得蒙保守，在我主耶稣基督降临的时候，完全无可指摘。"}},
+ "isa63_16":{"ref":{"en":"Isaiah 63:16","ko":"이사야 63:16","zh":"以赛亚书 63:16"},"t":{"en":"For you are our Father, though Abraham doesn’t know us, and Israel does not acknowledge us. You, Yahweh, are our Father. Our Redeemer from everlasting is your name.","ko":"주는 우리 아버지시라. 아브라함은 우리를 모르고 이스라엘은 우리를 인정하지 아니할지라도 여호와여, 주는 우리의 아버지시라. 상고부터 주의 이름을 우리의 구속자라 하였거늘.","zh":"亚伯拉罕虽然不认识我们，以色列也不承认我们，你却是我们的父。耶和华啊，你是我们的父；从万古以来，你名称为我们的救赎主。"}},
+ "job19_25":{"ref":{"en":"Job 19:25","ko":"욥기 19:25","zh":"约伯记 19:25"},"t":{"en":"But as for me, I know that my Redeemer lives. In the end, he will stand upon the earth.","ko":"내가 알기에는 나의 대속자가 살아 계시니 마침내 그가 땅 위에 서실 것이라.","zh":"我知道我的救赎主活着，末了必站立在地上。"}},
+ "lev25_25":{"ref":{"en":"Leviticus 25:25 · Ruth 4:4","ko":"레위기 25:25 · 룻기 4:4","zh":"利未记 25:25 · 路得记 4:4"},"t":{"en":"If your brother becomes poor and sells some of his possessions, then his kinsman who is next to him shall come and redeem that which his brother has sold. … “If you will redeem it, redeem it; but if you will not, tell me.”","ko":"만일 네 형제가 가난하여 그의 기업 중에서 얼마를 팔았으면 그에게 가까운 기업 무를 자가 와서 그의 형제가 판 것을 무를 것이요. … “네가 무르려면 무르라. 그러나 무르지 아니하려거든 내게 고하여 알게 하라.”","zh":"你的弟兄若渐渐穷乏，卖了几分地业，他至近的亲属就要来把弟兄所卖的赎回。……“你若肯赎就赎，若不肯赎就告诉我。”"}},
+ "heb2_14":{"ref":{"en":"Hebrews 2:14, 17","ko":"히브리서 2:14, 17","zh":"希伯来书 2:14, 17"},"t":{"en":"Since then the children have shared in flesh and blood, he also himself in the same way partook of the same, that through death he might bring to nothing him who had the power of death. … Therefore he was obligated in all things to be made like his brothers.","ko":"자녀들은 혈과 육에 속하였으매 그도 또한 같은 모양으로 혈과 육을 함께 지니심은 죽음을 통하여 죽음의 세력을 잡은 자를 멸하시며 … 그러므로 그가 범사에 형제들과 같이 되심이 마땅하도다.","zh":"儿女既同有血肉之体，他也照样亲自成了血肉之体，特要借着死败坏那掌死权的。……所以，他凡事该与他的弟兄相同。"}},
+ "1co15_45":{"ref":{"en":"1 Corinthians 15:22, 45, 47","ko":"고린도전서 15:22, 45, 47","zh":"哥林多前书 15:22, 45, 47"},"t":{"en":"For as in Adam all die, so also in Christ all will be made alive. … “The first man, Adam, became a living soul.” The last Adam became a life-giving spirit. … The first man is of the earth, made of dust. The second man is the Lord from heaven.","ko":"아담 안에서 모든 사람이 죽은 것 같이 그리스도 안에서 모든 사람이 삶을 얻으리라. … 첫 사람 아담은 생령이 되었다 함과 같이 마지막 아담은 살려 주는 영이 되었나니. … 첫 사람은 땅에서 났으니 흙에 속한 자이거니와 둘째 사람은 하늘에서 나셨느니라.","zh":"在亚当里众人都死了；照样，在基督里众人也都要复活。……“首先的人亚当成了有灵的活人”，末后的亚当成了叫人活的灵。……头一个人是出于地，乃属土；第二个人是出于天。"}},
+ "rom5_19":{"ref":{"en":"Romans 5:12, 19","ko":"로마서 5:12, 19","zh":"罗马书 5:12, 19"},"t":{"en":"Therefore as sin entered into the world through one man, and death through sin, so death passed to all men, because all sinned. … For as through the one man’s disobedience many were made sinners, even so through the obedience of the one, many will be made righteous.","ko":"그러므로 한 사람으로 말미암아 죄가 세상에 들어오고 죄로 말미암아 사망이 들어왔나니 이와 같이 모든 사람이 죄를 지었으므로 사망이 모든 사람에게 이르렀느니라. … 한 사람이 순종하지 아니함으로 많은 사람이 죄인 된 것 같이 한 사람이 순종하심으로 많은 사람이 의인이 되리라.","zh":"这就如罪是从一人入了世界，死又是从罪来的，于是死就临到众人，因为众人都犯了罪。……因一人的悖逆，众人成为罪人；照样，因一人的顺从，众人也成为义了。"}},
+ "1pe1_18":{"ref":{"en":"1 Peter 1:18–19 · Mark 10:45","ko":"베드로전서 1:18–19 · 마가복음 10:45","zh":"彼得前书 1:18–19 · 马可福音 10:45"},"t":{"en":"You were redeemed, not with corruptible things like silver or gold, but with precious blood, as of a lamb without blemish or spot, the blood of Christ. … The Son of Man came to give his life as a ransom for many.","ko":"너희가 대속함을 받은 것은 은이나 금 같이 없어질 것으로 된 것이 아니요 오직 흠 없고 점 없는 어린 양 같은 그리스도의 보배로운 피로 된 것이니라. … 인자가 온 것은 자기 목숨을 많은 사람의 대속물로 주려 함이니라.","zh":"你们得赎……不是凭着能坏的金银等物，乃是凭着基督的宝血，如同无瑕疵、无玷污的羔羊之血。……人子来……要舍命作多人的赎价。"}},
+ "isa53_5":{"ref":{"en":"Isaiah 53:5 · Revelation 5:9","ko":"이사야 53:5 · 요한계시록 5:9","zh":"以赛亚书 53:5 · 启示录 5:9"},"t":{"en":"But he was pierced for our transgressions. He was crushed for our iniquities. … “You were killed, and bought us for God with your blood out of every tribe, language, people, and nation.”","ko":"그가 찔림은 우리의 허물 때문이요 그가 상함은 우리의 죄악 때문이라. … “일찍이 죽임을 당하사 각 족속과 방언과 백성과 나라 가운데에서 사람들을 피로 사서 하나님께 드리셨도다.”","zh":"哪知他为我们的过犯受害，为我们的罪孽压伤。……“因为你曾被杀，用自己的血从各族、各方、各民、各国中买了人来，叫他们归于神。”"}},
+ "php2_6":{"ref":{"en":"Philippians 2:6–8","ko":"빌립보서 2:6–8","zh":"腓立比书 2:6–8"},"t":{"en":"Who, existing in the form of God, didn’t consider equality with God a thing to be grasped, but emptied himself, taking the form of a servant, being made in the likeness of men. And being found in human form, he humbled himself, becoming obedient to the point of death, yes, the death of the cross.","ko":"그는 근본 하나님의 본체시나 하나님과 동등됨을 취할 것으로 여기지 아니하시고 오히려 자기를 비워 종의 형체를 가지사 사람들과 같이 되셨고, 사람의 모양으로 나타나사 자기를 낮추시고 죽기까지 복종하셨으니 곧 십자가에 죽으심이라.","zh":"他本有神的形像，不以自己与神同等为强夺的，反倒虚己，取了奴仆的形像，成为人的样式；既有人的样子，就自己卑微，存心顺服，以至于死，且死在十字架上。"}},
+ "php2_9":{"ref":{"en":"Philippians 2:9–11","ko":"빌립보서 2:9–11","zh":"腓立比书 2:9–11"},"t":{"en":"Therefore God also highly exalted him, and gave to him the name which is above every name, that at the name of Jesus every knee should bow, and that every tongue should confess that Jesus Christ is Lord, to the glory of God the Father.","ko":"이러므로 하나님이 그를 지극히 높여 모든 이름 위에 뛰어난 이름을 주사, 하늘에 있는 자들과 땅에 있는 자들과 땅 아래 있는 자들로 모든 무릎을 예수의 이름에 꿇게 하시고 모든 입으로 예수 그리스도를 주라 시인하여 하나님 아버지께 영광을 돌리게 하셨느니라.","zh":"所以，神将他升为至高，又赐给他那超乎万名之上的名，叫一切在天上的、地上的和地底下的，因耶稣的名无不屈膝，无不口称耶稣基督为主，使荣耀归与父神。"}},
+ "jn12_49":{"ref":{"en":"John 12:49 · Hebrews 5:8–9","ko":"요한복음 12:49 · 히브리서 5:8–9","zh":"约翰福音 12:49 · 希伯来书 5:8–9"},"t":{"en":"For I spoke not from myself, but the Father who sent me, he gave me a commandment, what I should say and what I should speak. … Though he was a Son, yet he learned obedience by the things which he suffered. Having been made perfect, he became to all of those who obey him the author of eternal salvation.","ko":"내가 내 자의로 말한 것이 아니요 나를 보내신 아버지께서 내가 말할 것과 이를 것을 친히 명령하여 주셨으니. … 그가 아들이시면서도 받으신 고난으로 순종함을 배워서 온전하게 되셨은즉 자기에게 순종하는 모든 자에게 영원한 구원의 근원이 되시고,","zh":"因为我没有凭着自己讲，惟有差我来的父已经给我命令，叫我说什么，讲什么。……他虽然为儿子，还是因所受的苦难学了顺从。他既得以完全，就为凡顺从他的人成了永远得救的根源。"}},
+ "1co15_3":{"ref":{"en":"1 Corinthians 15:3–4 · Psalm 16:10","ko":"고린도전서 15:3–4 · 시편 16:10","zh":"哥林多前书 15:3–4 · 诗篇 16:10"},"t":{"en":"Christ died for our sins according to the Scriptures; he was buried; he was raised on the third day according to the Scriptures. … For you will not leave my soul in Sheol, neither will you allow your holy one to see corruption.","ko":"그리스도께서 성경대로 우리 죄를 위하여 죽으시고 장사 지낸 바 되셨다가 성경대로 사흘 만에 다시 살아나사. … 이는 주께서 내 영혼을 스올에 버리지 아니하시며 주의 거룩한 자를 멸망시키지 않으실 것임이니이다.","zh":"基督照圣经所说，为我们的罪死了，而且埋葬了；又照圣经所说，第三天复活了。……因为你必不将我的灵魂撇在阴间，也不叫你的圣者见朽坏。"}},
+ "ps110_1":{"ref":{"en":"Psalm 110:1 · Acts 2:36","ko":"시편 110:1 · 사도행전 2:36","zh":"诗篇 110:1 · 使徒行传 2:36"},"t":{"en":"Yahweh says to my Lord, “Sit at my right hand, until I make your enemies your footstool.” … Let all the house of Israel therefore know certainly that God has made him both Lord and Christ, this Jesus whom you crucified.","ko":"여호와께서 내 주에게 말씀하시기를 “내가 네 원수들로 네 발판이 되게 하기까지 너는 내 오른쪽에 앉아 있으라” 하셨도다. … 그런즉 이스라엘 온 집은 확실히 알지니 너희가 십자가에 못 박은 이 예수를 하나님이 주와 그리스도가 되게 하셨느니라.","zh":"耶和华对我主说：“你坐在我的右边，等我使你仇敌作你的脚凳。”……故此，以色列全家当确实地知道，你们钉在十字架上的这位耶稣，神已经立他为主，为基督了。"}},
+ "eph1_20":{"ref":{"en":"Ephesians 1:20–22","ko":"에베소서 1:20–22","zh":"以弗所书 1:20–22"},"t":{"en":"He raised him from the dead and made him to sit at his right hand in the heavenly places, far above all rule and authority and power and dominion, and every name that is named. He put all things in subjection under his feet.","ko":"그를 죽은 자들 가운데서 살리시고 하늘에서 자기의 오른편에 앉히사 모든 통치와 권세와 능력과 주권과 이 세상뿐 아니라 오는 세상에 일컫는 모든 이름 위에 뛰어나게 하시고, 또 만물을 그의 발 아래에 복종하게 하셨느니라.","zh":"使他从死里复活，叫他在天上坐在自己的右边，远超过一切执政的、掌权的、有能的、主治的和一切有名的……又将万有服在他的脚下。"}},
+ "dan7_13":{"ref":{"en":"Daniel 7:13–14","ko":"다니엘 7:13–14","zh":"但以理书 7:13–14"},"t":{"en":"There came with the clouds of the sky one like a son of man. … There was given him dominion and glory and a kingdom, that all the peoples, nations, and languages should serve him. His dominion is an everlasting dominion which will not pass away.","ko":"인자 같은 이가 하늘 구름을 타고 와서 … 그에게 권세와 영광과 나라를 주고 모든 백성과 나라들과 다른 언어를 하는 자들이 그를 섬기게 하였으니 그의 권세는 소멸되지 아니하는 영원한 권세요.","zh":"见有一位像人子的，驾着天云而来……得了权柄、荣耀、国度，使各方、各国、各族的人都事奉他。他的权柄是永远的，不能废去。"}},
+ "rev19_16":{"ref":{"en":"Revelation 19:16 · 11:15","ko":"요한계시록 19:16 · 11:15","zh":"启示录 19:16 · 11:15"},"t":{"en":"He has on his garment and on his thigh a name written: KING OF KINGS AND LORD OF LORDS. … The kingdom of the world has become the Kingdom of our Lord and of his Christ. He will reign forever and ever!","ko":"그 옷과 그 다리에 이름을 쓴 것이 있으니 “만왕의 왕이요 만주의 주”라 하였더라. … 세상 나라가 우리 주와 그의 그리스도의 나라가 되어 그가 세세토록 왕 노릇 하시리로다.","zh":"在他衣服和大腿上有名写着说：“万王之王，万主之主。”……世上的国成了我主和主基督的国；他要作王，直到永永远远。"}},
+ "jn14_26":{"ref":{"en":"John 14:26 · 16:13–14","ko":"요한복음 14:26 · 16:13–14","zh":"约翰福音 14:26 · 16:13–14"},"t":{"en":"But the Counselor, the Holy Spirit, whom the Father will send in my name, he will teach you all things and will remind you of all that I said to you. … When he, the Spirit of truth, has come, he will guide you into all truth. He will glorify me, for he will take from what is mine and will declare it to you.","ko":"보혜사 곧 아버지께서 내 이름으로 보내실 성령 그가 너희에게 모든 것을 가르치시고 내가 너희에게 말한 모든 것을 생각나게 하시리라. … 진리의 성령이 오시면 그가 너희를 모든 진리 가운데로 인도하시리니 … 그가 내 영광을 나타내리니 내 것을 가지고 너희에게 알리시겠음이라.","zh":"但保惠师，就是父因我的名所要差来的圣灵，他要将一切的事指教你们，并且要叫你们想起我对你们所说的一切话。……只等真理的圣灵来了，他要引导你们明白一切的真理……他要荣耀我，因为他要将受于我的告诉你们。"}},
+ "act2_33":{"ref":{"en":"Acts 2:33","ko":"사도행전 2:33","zh":"使徒行传 2:33"},"t":{"en":"Being therefore exalted by the right hand of God, and having received from the Father the promise of the Holy Spirit, he has poured out this which you now see and hear.","ko":"하나님이 오른손으로 예수를 높이시매 그가 약속하신 성령을 아버지께 받아서 너희가 보고 듣는 이것을 부어 주셨느니라.","zh":"他既被神的右手高举，又从父受了所应许的圣灵，就把你们所看见所听见的浇灌下来。"}},
+ "jn14_2":{"ref":{"en":"John 14:2–3 · Luke 18:8","ko":"요한복음 14:2–3 · 누가복음 18:8","zh":"约翰福音 14:2–3 · 路加福音 18:8"},"t":{"en":"In my Father’s house are many homes. I am going to prepare a place for you. If I go and prepare a place for you, I will come again and will receive you to myself, that where I am, you may be there also. … Nevertheless, when the Son of Man comes, will he find faith on the earth?","ko":"내 아버지 집에 거할 곳이 많도다. 내가 너희를 위하여 거처를 예비하러 가노니, 가서 너희를 위하여 거처를 예비하면 내가 다시 와서 너희를 내게로 영접하여 나 있는 곳에 너희도 있게 하리라. … 그러나 인자가 올 때에 세상에서 믿음을 보겠느냐 하시니라.","zh":"在我父的家里有许多住处……我去原是为你们预备地方去。我若去为你们预备了地方，就必再来接你们到我那里去；我在哪里，叫你们也在那里。……然而，人子来的时候，遇得见世上有信德吗？"}},
+ "jn12_48":{"ref":{"en":"John 12:47–48","ko":"요한복음 12:47–48","zh":"约翰福音 12:47–48"},"t":{"en":"If anyone listens to my sayings and doesn’t believe, I don’t judge him. For I came not to judge the world, but to save the world. He who rejects me and doesn’t receive my sayings has one who judges him. The word that I spoke will judge him in the last day.","ko":"사람이 내 말을 듣고 지키지 아니할지라도 내가 그를 심판하지 아니하노라. 내가 온 것은 세상을 심판하려 함이 아니요 세상을 구원하려 함이로라. 나를 저버리고 내 말을 받지 아니하는 자를 심판할 이가 있으니 곧 내가 한 그 말이 마지막 날에 그를 심판하리라.","zh":"若有人听见我的话不遵守，我不审判他。我来本不是要审判世界，乃是要拯救世界。弃绝我、不领受我话的人，有审判他的——就是我所讲的道，在末日要审判他。"}},
+ "jn5_22":{"ref":{"en":"John 5:22, 27","ko":"요한복음 5:22, 27","zh":"约翰福音 5:22, 27"},"t":{"en":"For the Father judges no one, but he has given all judgment to the Son. … He also gave him authority to execute judgment, because he is a son of man.","ko":"아버지께서 아무도 심판하지 아니하시고 심판을 다 아들에게 맡기셨으니. … 또 인자됨으로 말미암아 심판하는 권한을 주셨느니라.","zh":"父不审判什么人，乃将审判的事全交与子。……并且因为他是人子，就赐给他行审判的权柄。"}},
+ "jn5_28":{"ref":{"en":"John 5:28–29","ko":"요한복음 5:28–29","zh":"约翰福音 5:28–29"},"t":{"en":"All that are in the tombs will hear his voice and will come out: those who have done good, to the resurrection of life; and those who have done evil, to the resurrection of judgment.","ko":"무덤 속에 있는 자가 다 그의 음성을 들을 때가 오나니, 선한 일을 행한 자는 생명의 부활로, 악한 일을 행한 자는 심판의 부활로 나오리라.","zh":"凡在坟墓里的，都要听见他的声音，就出来：行善的，复活得生；作恶的，复活定罪。"}},
+ "jn5_24":{"ref":{"en":"John 5:24 · John 11:25","ko":"요한복음 5:24 · 요한복음 11:25","zh":"约翰福音 5:24 · 约翰福音 11:25"},"t":{"en":"Most certainly I tell you, he who hears my word and believes him who sent me has eternal life, and doesn’t come into judgment, but has passed out of death into life. … “I am the resurrection and the life. He who believes in me will still live, even if he dies.”","ko":"진실로 진실로 너희에게 이르노니 내 말을 듣고 또 나 보내신 이를 믿는 자는 영생을 얻었고 심판에 이르지 아니하나니 사망에서 생명으로 옮겼느니라. … “나는 부활이요 생명이니 나를 믿는 자는 죽어도 살겠고.”","zh":"我实实在在地告诉你们，那听我话、又信差我来者的，就有永生，不至于定罪，是已经出死入生了。……“复活在我，生命也在我。信我的人虽然死了，也必复活。”"}},
+ "act17_31":{"ref":{"en":"Acts 17:31 · 2 Corinthians 5:10","ko":"사도행전 17:31 · 고린도후서 5:10","zh":"使徒行传 17:31 · 哥林多后书 5:10"},"t":{"en":"He has appointed a day in which he will judge the world in righteousness by the man whom he has ordained, of which he has given assurance to all men in that he has raised him from the dead. … For we must all be revealed before the judgment seat of Christ.","ko":"이는 정하신 사람으로 하여금 천하를 공의로 심판할 날을 작정하시고 이에 그를 죽은 자 가운데서 다시 살리신 것으로 모든 사람에게 믿을 만한 증거를 주셨음이니라. … 이는 우리가 다 반드시 그리스도의 심판대 앞에 나타나게 되어,","zh":"因为他已经定了日子，要借着他所设立的人按公义审判天下，并且叫他从死里复活，给万人作可信的凭据。……因为我们众人必要在基督台前显露出来。"}},
+ "rev20_12":{"ref":{"en":"Revelation 20:12 · 22:12","ko":"요한계시록 20:12 · 22:12","zh":"启示录 20:12 · 22:12"},"t":{"en":"The books were opened. … The dead were judged out of the things which were written in the books, according to their works. … “Behold, I come quickly. My reward is with me, to repay to each man according to his work.”","ko":"책들이 펴 있고 … 죽은 자들이 자기 행위를 따라 책들에 기록된 대로 심판을 받으니. … “보라, 내가 속히 오리니 내가 줄 상이 내게 있어 각 사람에게 그가 행한 대로 갚아 주리라.”","zh":"案卷展开了……死了的人都凭着这些案卷所记载的，照他们所行的受审判。……“看哪，我必快来！赏罚在我，要照各人所行的报应他。”"}}
+},
+
+"sections":[
+{
+ "id":"god","numeral":"I","dot":"#8FA0E8",
+ "field":"#26305E","fg":"#F0E9DA",
+ "title":{"en":"God","ko":"하나님","zh":"神"},
+ "thread":{"en":"He IS the Word","ko":"그가 곧 말씀이시다","zh":"祂就是道"},
+ "lead":{"en":"John’s Gospel does not begin with a birth. It begins before beginnings — with a Word who was already there.","ko":"요한복음은 탄생으로 시작하지 않습니다. 모든 시작 이전에서 시작합니다 — 이미 거기 계시던 말씀으로.","zh":"约翰福音不是从降生开始的。它从一切开始之前开始——从那位已经在那里的道开始。"},
+ "blocks":[
+  {"t":"p","x":{"en":"Every religion has an opinion about Jesus. Scripture makes a claim instead, and it makes it in the first sentence of the fourth Gospel. Read that sentence slowly: it has three clauses, and each one shuts a door on a wrong answer.","ko":"모든 종교가 예수에 대해 나름의 견해를 가지고 있습니다. 그러나 성경은 견해가 아니라 선언을 합니다. 그것도 네 번째 복음서의 첫 문장에서 말입니다. 그 문장을 천천히 읽어 보십시오. 세 개의 절로 되어 있고, 각 절이 잘못된 대답 하나씩을 닫아 버립니다.","zh":"每一种宗教对耶稣都有自己的看法。圣经却不是提出看法，而是发出宣告——就在第四卷福音书的第一句话里。慢慢读这句话：它有三个分句，每一句都关上了一扇错误答案的门。"}},
+  {"t":"s","v":["jn1_1"]},
+  {"t":"dia","kind":"clauses","title":{"en":"John 1:1 — three clauses, three doors closed","ko":"요한복음 1:1 — 세 개의 절, 닫히는 세 개의 문","zh":"约翰福音 1:1 — 三个分句，关上三扇门"},
+   "items":[
+    {"q":{"en":"“In the beginning was the Word”","ko":"“태초에 말씀이 계시니라”","zh":"“太初有道”"},
+     "a":{"en":"He does not begin when the beginning begins. He is already there, in the imperfect tense: continuously existing.","ko":"그는 시작이 시작될 때 시작되지 않으십니다. 이미 거기 계십니다. 헬라어 미완료 시제는 ‘계속 존재하고 계셨다’는 뜻입니다.","zh":"当起初开始时，祂并非才开始。祂已经在那里；希腊文的未完成时态意为“持续地存在着”。"},
+     "tag":{"en":"He is eternal — not created","ko":"영원하심 — 피조물이 아니심","zh":"永恒 — 非受造"}},
+    {"q":{"en":"“and the Word was with God”","ko":"“이 말씀이 하나님과 함께 계셨으니”","zh":"“道与神同在”"},
+     "a":{"en":"‘With’ means face to face. He is a distinct person in relationship, not a mode, a force, or an echo.","ko":"‘함께’는 얼굴을 마주한 관계를 뜻합니다. 그는 어떤 양태나 힘이나 메아리가 아니라, 관계 안에 계신 구별된 인격이십니다.","zh":"“同在”意为面对面。祂是关系中一位有别的位格，不是一种模式、能力或回声。"},
+     "tag":{"en":"He is personal — not impersonal","ko":"인격이심 — 비인격적 힘이 아니심","zh":"位格 — 非非人格"}},
+    {"q":{"en":"“and the Word was God”","ko":"“이 말씀은 곧 하나님이시니라”","zh":"“道就是神”"},
+     "a":{"en":"Not like God. Not near God. God — the same divine nature, without division.","ko":"하나님 ‘같은 분’이 아니고, 하나님께 ‘가까운 분’도 아닙니다. 하나님이십니다. 나뉘지 않은 동일한 신성이십니다.","zh":"不是“像神”，也不是“接近神”。就是神——同一的神性，毫无分割。"},
+     "tag":{"en":"He is divine — not a lesser being","ko":"신성이심 — 낮은 존재가 아니심","zh":"神性 — 非次等存在"}}
+   ]},
+  {"t":"p","x":{"en":"This is not John’s private theory. Jesus said it about himself, and the people listening understood exactly what he meant.","ko":"이것은 요한의 개인적인 생각이 아닙니다. 예수께서 친히 자신에 대해 말씀하셨고, 듣던 사람들은 그 뜻을 정확히 알아들었습니다.","zh":"这不是约翰个人的推论。耶稣亲口这样论到自己，而听见的人完全明白祂的意思。"}},
+  {"t":"s","v":["jn8_58","ex3_14","jn20_28","col2_9","jn17_5"]},
+  {"t":"callout","x":{"en":"When Jesus says “before Abraham was, I AM,” he is not claiming to be old. He is taking the name God gave Moses at the burning bush.","ko":"예수께서 “아브라함이 나기 전부터 내가 있느니라” 하실 때, 그것은 오래되었다는 말이 아닙니다. 하나님이 떨기나무 불꽃 가운데서 모세에게 주신 그 이름을 자기 것으로 취하신 것입니다.","zh":"耶稣说“还没有亚伯拉罕就有了我”，不是在说自己年岁久远。祂是把神在荆棘火焰中赐给摩西的那个名，取为己有。"}},
+  {"t":"dia","kind":"grid","title":{"en":"The attributes of God — all of them true of Jesus","ko":"하나님의 속성 — 그 전부가 예수께 해당됩니다","zh":"神的属性 — 全都归于耶稣"},
+   "items":[
+    {"b":{"en":"Eternal","ko":"영원하심","zh":"永恒"},"s":{"en":"No beginning, no end.","ko":"시작도 끝도 없으십니다.","zh":"无始无终。"},"e":{"en":"Rev 1:8 · John 1:1","ko":"계 1:8 · 요 1:1","zh":"启 1:8 · 约 1:1"}},
+    {"b":{"en":"All-powerful","ko":"전능하심","zh":"全能"},"s":{"en":"All authority in heaven and on earth.","ko":"하늘과 땅의 모든 권세를 가지셨습니다.","zh":"天上地下所有的权柄。"},"e":{"en":"Matt 28:18 · Heb 1:3","ko":"마 28:18 · 히 1:3","zh":"太 28:18 · 来 1:3"}},
+    {"b":{"en":"All-knowing","ko":"전지하심","zh":"全知"},"s":{"en":"He knew what was in each person.","ko":"사람 속에 있는 것을 친히 아셨습니다.","zh":"祂知道人心里所存的。"},"e":{"en":"John 2:24–25","ko":"요 2:24–25","zh":"约 2:24–25"}},
+    {"b":{"en":"Everywhere present","ko":"무소부재하심","zh":"无所不在"},"s":{"en":"With his people to the end of the age.","ko":"세상 끝날까지 함께 계십니다.","zh":"直到世界的末了，与人同在。"},"e":{"en":"Matt 18:20 · 28:20","ko":"마 18:20 · 28:20","zh":"太 18:20 · 28:20"}},
+    {"b":{"en":"Unchanging","ko":"불변하심","zh":"不变"},"s":{"en":"The same yesterday, today, forever.","ko":"어제나 오늘이나 영원토록 동일하십니다.","zh":"昨日今日直到永远一样。"},"e":{"en":"Heb 13:8","ko":"히 13:8","zh":"来 13:8"}},
+    {"b":{"en":"Holy","ko":"거룩하심","zh":"圣洁"},"s":{"en":"The Holy One of God, without sin.","ko":"하나님의 거룩하신 자, 죄가 없으십니다.","zh":"神的圣者，无罪。"},"e":{"en":"Isa 6:3 · John 6:69","ko":"사 6:3 · 요 6:69","zh":"赛 6:3 · 约 6:69"}},
+    {"b":{"en":"Love","ko":"사랑이심","zh":"慈爱"},"s":{"en":"God is love; he laid down his life.","ko":"하나님은 사랑이시며, 목숨을 버리셨습니다.","zh":"神就是爱；祂舍了自己的命。"},"e":{"en":"1 John 4:8 · John 15:13","ko":"요일 4:8 · 요 15:13","zh":"约壹 4:8 · 约 15:13"}},
+    {"b":{"en":"Glory","ko":"영광이심","zh":"荣耀"},"s":{"en":"The radiance of the Father’s glory.","ko":"아버지의 영광의 광채이십니다.","zh":"父荣耀所发的光辉。"},"e":{"en":"Heb 1:3 · John 17:5","ko":"히 1:3 · 요 17:5","zh":"来 1:3 · 约 17:5"}}
+   ]},
+  {"t":"s","v":["heb1_3","heb13_8","jn2_24","isa6_3","1jn4_8","rev1_8","mt28_18"]},
+  {"t":"mem","ref":"jn1_1"},
+  {"t":"q","items":[
+    {"en":"If any one of John’s three clauses were removed, what kind of Jesus would be left? Try it with each clause.","ko":"요한복음 1:1의 세 절 중 하나를 지운다면 어떤 예수가 남습니까? 세 절을 각각 지워 보며 생각해 보십시오.","zh":"如果去掉约翰福音1:1三个分句中的任何一句，剩下的会是怎样的耶稣？逐句试试看。"},
+    {"en":"Which attribute of God is hardest for you to actually believe about Jesus this week — and why?","ko":"이번 주 내 삶에서 예수께 대해 실제로 믿기 가장 어려운 하나님의 속성은 무엇이며, 그 이유는 무엇입니까?","zh":"这一周，你最难真正相信耶稣具备的神的属性是哪一项？为什么？"}
+  ]}
+ ]
+},
+
+{
+ "id":"creator","numeral":"II","dot":"#5CBFA6",
+ "field":"#14675E","fg":"#F0EFE0",
+ "title":{"en":"Creator","ko":"창조주","zh":"创造主"},
+ "thread":{"en":"He CREATES by the Word","ko":"말씀으로 창조하신다","zh":"祂以道创造"},
+ "lead":{"en":"Genesis answers “how” before it answers “what.” God speaks — and the world obeys.","ko":"창세기는 ‘무엇을’보다 ‘어떻게’를 먼저 대답합니다. 하나님이 말씀하시니 — 세상이 순종합니다.","zh":"创世记先回答“怎样”，再回答“什么”。神一说话——世界就顺服。"},
+ "blocks":[
+  {"t":"p","x":{"en":"Ten times in Genesis 1 the same phrase returns: “And God said.” Nothing is shaped by hand, nothing is fought into being. The pattern is always the same — speech, then existence, then evaluation. Creation is a spoken event. Which means the Word of John 1 is not a passive character in Genesis; he is the instrument through whom everything came.","ko":"창세기 1장에는 같은 표현이 열 번 반복됩니다 — “하나님이 이르시되.” 손으로 빚으신 것도, 싸워서 얻어낸 것도 없습니다. 패턴은 언제나 동일합니다. 말씀, 그리고 존재, 그리고 평가. 창조는 말해진 사건입니다. 그렇다면 요한복음 1장의 그 말씀은 창세기에서 구경꾼이 아니라, 만물이 그로 말미암아 지어진 그분이십니다.","zh":"创世记第一章十次重复同一句话：“神说。”没有一样是用手塑造的，没有一样是争战得来的。模式始终一样——说话，然后存在，然后评价。创造是一个被说出来的事件。这意味着约翰福音第一章的那位道，在创世记中并非旁观者，而是万物借以被造的那一位。"}},
+  {"t":"s","v":["gen1_1","ps33_6","heb11_3","jn1_2","col1_16"]},
+  {"t":"dia","kind":"formfill","title":{"en":"The shape of Genesis 1 — three days of forming, three days of filling","ko":"창세기 1장의 구조 — 사흘은 형태를, 사흘은 채움을","zh":"创世记第一章的结构 — 三天成形，三天充满"},
+   "head":[{"en":"Days 1–3 · He forms the empty","ko":"1–3일 · 공허한 것에 형태를","zh":"第 1–3 天 · 使空虚成形"},{"en":"Days 4–6 · He fills the formed","ko":"4–6일 · 형태 지어진 것을 채우심","zh":"第 4–6 天 · 使成形的充满"}],
+   "left":[
+    {"d":{"en":"Day 1","ko":"첫째 날","zh":"第一天"},"x":{"en":"Light separated from darkness","ko":"빛과 어둠을 나누심","zh":"分开光暗"}},
+    {"d":{"en":"Day 2","ko":"둘째 날","zh":"第二天"},"x":{"en":"Sky separated from sea","ko":"하늘과 바다를 나누심","zh":"分开天与水"}},
+    {"d":{"en":"Day 3","ko":"셋째 날","zh":"第三天"},"x":{"en":"Dry land and plants","ko":"뭍과 식물을 내심","zh":"旱地与植物"}}
+   ],
+   "right":[
+    {"d":{"en":"Day 4","ko":"넷째 날","zh":"第四天"},"x":{"en":"Sun, moon, stars","ko":"해와 달과 별들","zh":"日、月、星辰"}},
+    {"d":{"en":"Day 5","ko":"다섯째 날","zh":"第五天"},"x":{"en":"Birds and fish","ko":"새와 물고기","zh":"飞鸟与鱼类"}},
+    {"d":{"en":"Day 6","ko":"여섯째 날","zh":"第六天"},"x":{"en":"Land animals and humanity","ko":"육축과 사람","zh":"走兽与人类"}}
+   ],
+   "rest":{"en":"Day 7 · He rests — the work is finished and good","ko":"일곱째 날 · 안식하심 — 그 일이 다 이루어졌고 심히 좋았더라","zh":"第七天 · 安息 — 工作完成，甚好"}},
+  {"t":"h","x":{"en":"And then he does something different","ko":"그러나 사람에게는 다르게 하셨습니다","zh":"然后，祂做了不一样的事"}},
+  {"t":"p","x":{"en":"Everything else in Genesis 1 comes into being by speech alone. Humanity comes into being by speech and by breath. God stoops down, shapes dust, and breathes. Only here does the account slow down — because only here is the creature made to receive something of God himself.","ko":"창세기 1장의 다른 모든 것은 오직 말씀으로 존재하게 되었습니다. 그러나 사람은 말씀과 함께 ‘생기’로 지음받습니다. 하나님이 몸을 굽혀 흙을 빚으시고, 숨을 불어넣으십니다. 오직 여기서만 이야기가 느려집니다 — 오직 여기서만 피조물이 하나님 자신의 무엇인가를 받도록 지어졌기 때문입니다.","zh":"创世记第一章其余一切都是单凭话语而成的。唯独人是借着话语与气息而成的。神俯身，抟土，吹气。唯有在这里，叙述放慢了脚步——因为唯有在这里，受造之物被造成能领受神自己的什么。"}},
+  {"t":"dia","kind":"eq","title":{"en":"Genesis 2:7 — the making of a spiritual being","ko":"창세기 2:7 — 영적 존재의 지음","zh":"创世记 2:7 — 属灵存有的被造"},
+   "items":[
+    {"b":{"en":"Dust of the ground","ko":"땅의 흙","zh":"地上的尘土"},"s":{"en":"Body. The same material as the rest of creation — nothing special.","ko":"몸. 다른 피조물과 같은 재료입니다. 특별할 것이 없습니다.","zh":"身体。与其余受造之物同样的材料——本无特别。"},"op":"+"},
+    {"b":{"en":"The breath of God","ko":"하나님의 생기","zh":"神的生气"},"s":{"en":"Spirit. Given directly, personally, from God’s own mouth.","ko":"영. 하나님의 입에서 직접, 인격적으로 주어진 것입니다.","zh":"灵。直接地、亲自地，从神口中而出。"},"op":"="},
+    {"b":{"en":"A living soul","ko":"생령","zh":"有灵的活人"},"s":{"en":"A person who can hear God, answer God, and be held responsible before God.","ko":"하나님의 말씀을 듣고, 응답하며, 그 앞에서 책임을 지는 존재입니다.","zh":"一个能听见神、回应神、并在神面前负责的位格。"},"op":""}
+   ]},
+  {"t":"s","v":["gen2_7","gen1_26","1th5_23"]},
+  {"t":"callout","x":{"en":"If a human being is dust plus the breath of God, then no purely material solution can repair a human being. What was made by a word can only be remade by a word.","ko":"사람이 흙에 하나님의 생기가 더해진 존재라면, 순전히 물질적인 해결책으로는 사람을 고칠 수 없습니다. 말씀으로 지어진 것은 오직 말씀으로만 다시 지어질 수 있습니다.","zh":"若人是尘土加上神的气息，那么纯粹物质的方案就修复不了一个人。凭话语被造的，也只能凭话语被重造。"}},
+  {"t":"mem","ref":"gen2_7"},
+  {"t":"q","items":[
+    {"en":"Genesis never says God struggled to create. What does creation-by-speech tell you about his authority over what he made?","ko":"창세기는 하나님이 창조하시며 애쓰셨다고 말하지 않습니다. 말씀으로 창조하셨다는 사실은 그가 지으신 것에 대한 그의 권위에 대해 무엇을 말해 줍니까?","zh":"创世记从未说神创造时费力挣扎。“凭话语创造”告诉你祂对所造之物拥有怎样的权柄？"},
+    {"en":"Where in your life are you trying to fix a spiritual problem with a material solution?","ko":"내 삶에서 영적인 문제를 물질적인 방법으로 해결하려 하고 있는 부분은 어디입니까?","zh":"在你的生活中，哪里正试图用物质的办法解决属灵的问题？"}
+  ]}
+ ]
+},
+
+{
+ "id":"redeemer","numeral":"III","dot":"#E08A6B",
+ "field":"#98322C","fg":"#F7E9DF",
+ "title":{"en":"Redeemer","ko":"구속자","zh":"救赎主"},
+ "thread":{"en":"The Word BECAME flesh","ko":"말씀이 육신이 되셨다","zh":"道成了肉身"},
+ "lead":{"en":"Long before Bethlehem, Israel already had a name for God. It was not a new idea. It was his name from of old.","ko":"베들레헴보다 훨씬 이전에, 이스라엘은 이미 하나님을 부르는 이름을 가지고 있었습니다. 새로운 발상이 아니었습니다. 상고부터 있던 그의 이름이었습니다.","zh":"远在伯利恒之前，以色列早已有一个称呼神的名。这不是新的构想，而是祂从万古以来的名。"},
+ "blocks":[
+  {"t":"p","x":{"en":"Isaiah does not say God would one day become a redeemer. He says it is already God’s name — from everlasting. Job, from the middle of unbearable loss, says the same thing in the present tense: my Redeemer lives. Redemption is not God’s response to an emergency. It is who he has always been.","ko":"이사야는 하나님이 언젠가 구속자가 되실 것이라고 말하지 않습니다. 그것이 이미 하나님의 이름이라고 — 상고부터 그러하다고 말합니다. 견딜 수 없는 상실 한가운데 있던 욥도 현재형으로 같은 고백을 합니다. 나의 대속자가 살아 계신다. 구속은 비상사태에 대한 하나님의 대응책이 아닙니다. 그것은 그가 본래 어떤 분이신가입니다.","zh":"以赛亚并没有说神有一天会成为救赎主。他说这已经是神的名——从万古以来。约伯在难以承受的失丧之中，也用现在时说出同样的话：我的救赎主活着。救赎不是神对紧急状况的应变，而是祂本来的身份。"}},
+  {"t":"s","v":["isa63_16","job19_25"]},
+  {"t":"h","x":{"en":"What a redeemer had to be","ko":"구속자가 갖추어야 할 조건","zh":"救赎主必须具备的条件"}},
+  {"t":"p","x":{"en":"In Israel’s law the word behind “redeemer” is go’el — the kinsman-redeemer. When a family lost its land, its freedom, or its future, one particular relative could buy it back. But not just anyone could do it. Three conditions had to be met at once.","ko":"이스라엘 율법에서 ‘구속자’로 번역된 말은 고엘(go’el), 곧 ‘기업 무를 자’입니다. 한 가정이 땅이나 자유나 미래를 잃었을 때, 특정한 친족 한 사람이 그것을 다시 사서 돌려줄 수 있었습니다. 그러나 아무나 할 수 있는 일이 아니었습니다. 세 조건이 동시에 충족되어야 했습니다.","zh":"在以色列的律法中，“救赎主”背后的词是 go’el——至近的亲属救赎者。当一个家族失去了地业、自由或未来，某一位特定的亲属可以把它赎回。但不是随便谁都可以。三个条件必须同时满足。"}},
+  {"t":"dia","kind":"chk","title":{"en":"The three requirements of a go’el — and how Jesus meets each one","ko":"고엘의 세 가지 조건 — 예수께서 각각을 어떻게 충족하시는가","zh":"go’el 的三项要求 — 耶稣如何一一满足"},
+   "items":[
+    {"b":{"en":"1 · He must be a near kinsman","ko":"1 · 가까운 친족이어야 한다","zh":"1 · 必须是至近的亲属"},
+     "s":{"en":"A stranger cannot redeem. The redeemer has to share the family’s blood.","ko":"남은 무를 수 없습니다. 구속자는 그 가문의 피를 나눈 사람이어야 합니다.","zh":"外人不能赎。救赎者必须与这家族同有血脉。"},
+     "e":{"en":"So the Word became flesh. God became our relative. — John 1:14; Hebrews 2:14, 17","ko":"그래서 말씀이 육신이 되셨습니다. 하나님이 우리의 친족이 되셨습니다. — 요 1:14; 히 2:14, 17","zh":"于是道成了肉身。神成了我们的亲属。— 约 1:14；来 2:14, 17"}},
+    {"b":{"en":"2 · He must be able to pay","ko":"2 · 값을 치를 능력이 있어야 한다","zh":"2 · 必须有能力付赎价"},
+     "s":{"en":"A debtor cannot redeem another debtor. The redeemer must be free of the debt himself.","ko":"빚진 자가 다른 빚진 자를 무를 수 없습니다. 구속자 자신이 그 빚에서 자유로워야 합니다.","zh":"负债者不能赎另一个负债者。救赎者自己必须没有这债。"},
+     "e":{"en":"He alone was without sin, and his blood was of infinite worth. — 1 Peter 1:18–19","ko":"오직 그만이 죄가 없으셨고, 그의 피는 값을 매길 수 없는 것이었습니다. — 벧전 1:18–19","zh":"唯有祂无罪，祂的血有无限的价值。— 彼前 1:18–19"}},
+    {"b":{"en":"3 · He must be willing","ko":"3 · 자원하는 마음이 있어야 한다","zh":"3 · 必须甘心愿意"},
+     "s":{"en":"In Ruth, the nearer kinsman had the right — and declined it. Ability is not enough.","ko":"룻기에서 더 가까운 친족은 권리가 있었지만 사양했습니다. 능력만으로는 부족합니다.","zh":"在路得记中，那更近的亲属有此权利——却推辞了。有能力还不够。"},
+     "e":{"en":"He came to give his life as a ransom for many. No one took it from him. — Mark 10:45","ko":"그는 자기 목숨을 많은 사람의 대속물로 주려고 오셨습니다. 아무도 그의 목숨을 빼앗은 것이 아닙니다. — 막 10:45","zh":"祂来是要舍命作多人的赎价。没有人夺去祂的命。— 可 10:45"}}
+   ]},
+  {"t":"s","v":["lev25_25","jn1_14","heb2_14","1pe1_18","isa53_5"]},
+  {"t":"h","x":{"en":"The first Adam and the last Adam","ko":"첫 아담과 마지막 아담","zh":"首先的亚当与末后的亚当"}},
+  {"t":"p","x":{"en":"Paul explains the whole of history through two men. Everything that went wrong entered through one representative; everything that is put right enters through another. Jesus does not come as a better example. He comes as a second head of the human race.","ko":"바울은 인류 역사 전체를 두 사람으로 설명합니다. 잘못된 모든 것은 한 대표자를 통해 들어왔고, 바로잡히는 모든 것은 또 다른 대표자를 통해 들어옵니다. 예수는 더 나은 본보기로 오신 것이 아닙니다. 인류의 두 번째 머리로 오셨습니다.","zh":"保罗用两个人解释整部历史。一切败坏借着一位代表进入，一切复正也借着另一位代表进入。耶稣不是作为更好的榜样而来，祂是作为人类的第二位元首而来。"}},
+  {"t":"dia","kind":"cmp","title":{"en":"Two men, two outcomes","ko":"두 사람, 두 결말","zh":"两个人，两种结局"},
+   "heads":[{"b":{"en":"The first Adam","ko":"첫 아담","zh":"首先的亚当"},"s":{"en":"1 Corinthians 15:45–47","ko":"고린도전서 15:45–47","zh":"哥林多前书 15:45–47"}},
+            {"b":{"en":"The last Adam · Christ","ko":"마지막 아담 · 그리스도","zh":"末后的亚当 · 基督"},"s":{"en":"Romans 5:12–19","ko":"로마서 5:12–19","zh":"罗马书 5:12–19"}}],
+   "rows":[
+    {"label":{"en":"Origin","ko":"출처","zh":"来源"},"l":{"en":"Of the earth, made of dust","ko":"땅에서 났으니 흙에 속한 자","zh":"出于地，乃属土"},"r":{"en":"The Lord from heaven","ko":"하늘에서 나신 주","zh":"出于天的主"}},
+    {"label":{"en":"Received or gave life","ko":"생명을 받음 / 생명을 줌","zh":"受生命 / 赐生命"},"l":{"en":"Became a living soul — he received life","ko":"생령이 되었다 — 생명을 받은 자","zh":"成了有灵的活人——他领受生命"},"r":{"en":"Became a life-giving spirit — he gives life","ko":"살려 주는 영이 되셨다 — 생명을 주시는 분","zh":"成了叫人活的灵——祂赐下生命"}},
+    {"label":{"en":"The decisive act","ko":"결정적 행위","zh":"决定性的行动"},"l":{"en":"One act of disobedience to God’s word","ko":"하나님의 말씀에 대한 한 번의 불순종","zh":"对神话语的一次悖逆"},"r":{"en":"One life of obedience, to the point of death","ko":"죽기까지 이르는 한 생애의 순종","zh":"一生的顺服，直到死"}},
+    {"label":{"en":"What entered the world","ko":"세상에 들어온 것","zh":"进入世界的"},"l":{"en":"Sin, and death through sin","ko":"죄, 그리고 죄로 말미암은 사망","zh":"罪，以及因罪而来的死"},"r":{"en":"Righteousness, and life through righteousness","ko":"의, 그리고 의로 말미암은 생명","zh":"义，以及因义而来的生命"}},
+    {"label":{"en":"Who is included","ko":"누가 포함되는가","zh":"谁被包含在内"},"l":{"en":"In Adam all die — by birth","ko":"아담 안에서 모든 사람이 죽는다 — 태어남으로","zh":"在亚当里众人都死了——因出生"},"r":{"en":"In Christ all will be made alive — by faith","ko":"그리스도 안에서 모든 사람이 산다 — 믿음으로","zh":"在基督里众人都要活——因信"}}
+   ]},
+  {"t":"s","v":["1co15_45","rom5_19"]},
+  {"t":"mem","ref":"jn1_14"},
+  {"t":"q","items":[
+    {"en":"Which of the three go’el requirements would we still be stuck on if the incarnation had never happened?","ko":"성육신이 없었다면, 고엘의 세 조건 중 어느 것에서 우리는 여전히 막혀 있었겠습니까?","zh":"若道成肉身从未发生，我们仍会卡在 go’el 三项要求中的哪一项？"},
+    {"en":"“In Adam by birth, in Christ by faith.” Where would you honestly locate yourself today, and what makes you say so?","ko":"“아담 안에는 태어남으로, 그리스도 안에는 믿음으로.” 오늘 나는 솔직히 어디에 서 있으며, 그렇게 말하는 근거는 무엇입니까?","zh":"“在亚当里因出生，在基督里因信心。”今天你诚实地说自己站在哪里？根据是什么？"}
+  ]}
+ ]
+},
+
+{
+ "id":"king","numeral":"IV","dot":"#E9C46A",
+ "field":"#D9A02B","fg":"#2A2113",
+ "title":{"en":"King of Kings","ko":"만왕의 왕","zh":"万王之王"},
+ "thread":{"en":"He OBEYED the Word to death","ko":"말씀에 죽기까지 순종하셨다","zh":"祂顺服道直到死"},
+ "lead":{"en":"The road to the throne runs downward. Philippians 2 is the map, and the hinge of the whole map is one word: therefore.","ko":"보좌로 가는 길은 아래로 향합니다. 빌립보서 2장이 그 지도이며, 지도 전체의 경첩은 단 한 단어입니다 — “이러므로.”","zh":"通往宝座的路是向下的。腓立比书第二章就是这幅地图，而整幅地图的枢纽只有一个词：“所以”。"},
+ "blocks":[
+  {"t":"p","x":{"en":"Jesus never claims a throne. He receives one. And what he receives it for is stated plainly: obedience — obedience to the Father’s word, carried all the way to a cross. He said he spoke nothing on his own authority. He did what he told others to do.","ko":"예수는 보좌를 스스로 차지하지 않으십니다. 받으십니다. 그리고 무엇 때문에 받으셨는지가 분명히 진술됩니다 — 순종입니다. 아버지의 말씀에 대한 순종, 십자가에까지 이른 순종입니다. 그는 자기 마음대로 말한 적이 없다고 하셨습니다. 남에게 하라 하신 것을 자신이 하셨습니다.","zh":"耶稣从不自取宝座，祂是领受的。而祂因何领受，经文说得明白——顺服。对父话语的顺服，一直走到十字架。祂说自己没有凭着自己讲。祂做了祂吩咐别人去做的事。"}},
+  {"t":"dia","kind":"stair","title":{"en":"Philippians 2:6–11 — seven steps down, then the throne","ko":"빌립보서 2:6–11 — 일곱 계단을 내려가신 후에 보좌","zh":"腓立比书 2:6–11 — 向下七级，然后是宝座"},
+   "downHead":{"en":"Descent · what the Son did","ko":"하강 · 아들이 하신 일","zh":"下降 · 子所行的"},
+   "upHead":{"en":"Exaltation · what the Father did","ko":"높아지심 · 아버지께서 하신 일","zh":"高举 · 父所行的"},
+   "hinge":{"en":"“Therefore God also highly exalted him”","ko":"“이러므로 하나님이 그를 지극히 높여”","zh":"“所以，神将他升为至高”"},
+   "down":[
+    {"en":"Existing in the very form of God","ko":"근본 하나님의 본체이심","zh":"本有神的形像"},
+    {"en":"Did not cling to equality with God","ko":"하나님과 동등됨을 취할 것으로 여기지 않으심","zh":"不以与神同等为强夺的"},
+    {"en":"Emptied himself","ko":"자기를 비우심","zh":"反倒虚己"},
+    {"en":"Took the form of a servant","ko":"종의 형체를 가지심","zh":"取了奴仆的形像"},
+    {"en":"Was born in human likeness","ko":"사람들과 같이 되심","zh":"成为人的样式"},
+    {"en":"Humbled himself, obedient to God’s word","ko":"자기를 낮추시고 하나님의 말씀에 복종하심","zh":"自己卑微，顺服神的话"},
+    {"en":"Obedient to death — even death on a cross","ko":"죽기까지 복종하심 — 곧 십자가의 죽음","zh":"顺服以至于死，且死在十字架上"}
+   ],
+   "up":[
+    {"en":"God raised him — as the Scriptures had said","ko":"하나님이 그를 살리심 — 성경이 말한 그대로","zh":"神叫他复活——正如圣经所说"},
+    {"en":"Seated him at his own right hand","ko":"자기 오른편에 앉히심","zh":"叫他坐在自己的右边"},
+    {"en":"Gave him the name above every name","ko":"모든 이름 위에 뛰어난 이름을 주심","zh":"赐给他超乎万名之上的名"},
+    {"en":"Every knee bows, every tongue confesses: Jesus Christ is Lord","ko":"모든 무릎이 꿇고 모든 입이 시인함: 예수 그리스도는 주시라","zh":"万膝跪拜，万口承认：耶稣基督为主"}
+   ]},
+  {"t":"s","v":["php2_6","jn12_49","php2_9"]},
+  {"t":"callout","x":{"en":"He did not rise because he was strong enough to break out. He rose because the Father’s word had said he would — and he had staked everything on that word being true.","ko":"그는 스스로 빠져나올 만큼 강해서 살아나신 것이 아닙니다. 아버지의 말씀이 그렇게 되리라 하셨기 때문에 살아나셨습니다. 그리고 그는 그 말씀이 참되다는 것에 모든 것을 거셨습니다.","zh":"祂复活，不是因为祂强壮到足以挣脱，而是因为父的话已经说了必如此——而祂把一切都押在那话是真的这一点上。"}},
+  {"t":"s","v":["1co15_3","ps110_1","act2_33","eph1_20"]},
+  {"t":"h","x":{"en":"Enthroned — and the title is not decorative","ko":"보좌에 앉으심 — 그 칭호는 장식이 아닙니다","zh":"登上宝座 — 这称号不是装饰"}},
+  {"t":"p","x":{"en":"Daniel saw it centuries early: one like a son of man given a dominion that will not pass away. Revelation names it on his robe. Between the two stands an empty tomb and a Galilean carpenter saying that all authority in heaven and on earth has been handed to him.","ko":"다니엘은 수백 년 전에 그것을 보았습니다. 인자 같은 이가 소멸되지 않는 권세를 받는 장면입니다. 요한계시록은 그 이름을 그의 옷에 새겨 부릅니다. 그 사이에는 빈 무덤과, 하늘과 땅의 모든 권세를 자기가 받았다고 말씀하시는 갈릴리의 목수가 서 있습니다.","zh":"但以理在数百年前就看见了：有一位像人子的，得了永不废去的权柄。启示录把这名写在祂的衣服上。在这两者之间，站着一座空坟墓，和一位说“天上地下所有的权柄都赐给我了”的加利利木匠。"}},
+  {"t":"s","v":["dan7_13","mt28_18","rev19_16"]},
+  {"t":"mem","ref":"php2_9"},
+  {"t":"q","items":[
+    {"en":"The path was down before it was up. Where is God currently asking you to go down rather than up?","ko":"길은 올라가기 전에 먼저 내려가는 길이었습니다. 지금 하나님은 내가 어디에서 올라가기보다 내려가기를 원하십니까?","zh":"这条路是先向下，才向上。此刻神在哪里要你向下，而不是向上？"},
+    {"en":"“Jesus is Lord” was the earliest Christian confession. What does that sentence actually cost the person who says it?","ko":"“예수는 주시다”는 가장 초기의 기독교 신앙고백이었습니다. 그 한 문장은 그것을 말하는 사람에게 실제로 무엇을 요구합니까?","zh":"“耶稣是主”是最早的基督徒信仰告白。这句话对说出它的人实际上索取什么？"}
+  ]}
+ ]
+},
+
+{
+ "id":"judge","numeral":"V","dot":"#C9A6E0",
+ "field":"#4E3466","fg":"#EFE4F2",
+ "title":{"en":"Judge","ko":"심판주","zh":"审判者"},
+ "thread":{"en":"He JUDGES by the Word","ko":"그 말씀으로 심판하신다","zh":"祂用道审判"},
+ "lead":{"en":"The King who left did not leave us in silence. He sent the Spirit so that his words would live in his people — and those same words will one day open the books.","ko":"떠나가신 왕은 우리를 침묵 속에 남겨두지 않으셨습니다. 그의 말씀이 그의 백성 안에 살아 있도록 성령을 보내셨습니다 — 그리고 바로 그 말씀이 언젠가 책들을 펼칠 것입니다.","zh":"离去的王没有把我们留在沉默中。祂差下圣灵，使祂的话活在祂的子民里面——而正是这同一番话，有一天要展开案卷。"},
+ "blocks":[
+  {"t":"p","x":{"en":"Notice the sequence carefully; it is not random. He is seated, he sends the Spirit, the Spirit brings his words back to memory, he prepares a place, he returns — and then he judges. Every station in that sequence is about the same thing: his word being received or refused.","ko":"순서를 주의 깊게 보십시오. 우연한 나열이 아닙니다. 그는 앉으시고, 성령을 보내시고, 성령은 그의 말씀을 생각나게 하시며, 그는 거처를 예비하시고, 다시 오시며 — 그리고 심판하십니다. 이 순서의 모든 단계는 같은 한 가지에 관한 것입니다. 그의 말씀이 받아들여졌는가, 거절되었는가.","zh":"请仔细留意这个次序，它并非随意排列。祂坐下，祂差下圣灵，圣灵使人想起祂的话，祂预备地方，祂再来——然后祂审判。这次序中的每一站都关乎同一件事：祂的话被领受，还是被拒绝。"}},
+  {"t":"dia","kind":"tl","title":{"en":"From the throne to the last day","ko":"보좌에서 마지막 날까지","zh":"从宝座到末日"},
+   "items":[
+    {"b":{"en":"He is seated at the right hand","ko":"오른편에 앉으심","zh":"坐在右边"},
+     "s":{"en":"The work of redemption is finished; the reign has begun.","ko":"구속의 일이 완성되었고, 통치가 시작되었습니다.","zh":"救赎之工已成，掌权已经开始。"},"e":{"en":"Acts 2:33","ko":"행 2:33","zh":"徒 2:33"}},
+    {"b":{"en":"He sends the Spirit to the church","ko":"교회와 믿는 자에게 성령을 보내심","zh":"差圣灵到教会"},
+     "s":{"en":"Not a replacement teacher — the same teaching, made alive inside believers.","ko":"다른 선생이 아닙니다. 같은 가르침이 믿는 자 안에서 살아나게 하시는 것입니다.","zh":"不是换了一位老师——是同一番教导，在信徒里面被点活。"},"e":{"en":"John 14:26","ko":"요 14:26","zh":"约 14:26"}},
+    {"b":{"en":"His words are understood and believed","ko":"그의 말씀을 깨닫고 믿게 하심","zh":"祂的话被明白、被相信"},
+     "s":{"en":"The Spirit takes what is Christ’s and declares it — he glorifies the Son, never himself.","ko":"성령은 그리스도의 것을 가지고 알리십니다. 아들을 영화롭게 하시지 자기를 영화롭게 하지 않으십니다.","zh":"圣灵将属基督的告诉人——祂荣耀子，从不荣耀自己。"},"e":{"en":"John 16:13–14","ko":"요 16:13–14","zh":"约 16:13–14"}},
+    {"b":{"en":"He prepares a place","ko":"거처를 예비하러 가심","zh":"祂去预备地方"},
+     "s":{"en":"The absence is not abandonment. It is preparation, with a promise attached to it.","ko":"떠나심은 버리심이 아닙니다. 약속이 붙어 있는 예비하심입니다.","zh":"祂的离开不是撇弃，而是带着应许的预备。"},"e":{"en":"John 14:2–3","ko":"요 14:2–3","zh":"约 14:2–3"}},
+    {"b":{"en":"He returns — and asks one question","ko":"다시 오셔서 한 가지를 물으심","zh":"祂再来 — 并问一个问题"},
+     "s":{"en":"“When the Son of Man comes, will he find faith on the earth?” The question is not about knowledge. It is about trust in what he said.","ko":"“인자가 올 때에 세상에서 믿음을 보겠느냐?” 이 질문은 지식에 관한 것이 아니라, 그가 하신 말씀을 신뢰했는가에 관한 것입니다.","zh":"“人子来的时候，遇得见世上有信德吗？”这问题不关乎知识，而关乎人是否信靠祂所说的话。"},"e":{"en":"Luke 18:8","ko":"눅 18:8","zh":"路 18:8"}},
+    {"b":{"en":"He judges — by the word he spoke","ko":"그가 하신 그 말씀으로 심판하심","zh":"祂审判 — 用祂所讲的道"},
+     "s":{"en":"The standard is not a secret. It has been public for two thousand years.","ko":"심판의 기준은 비밀이 아닙니다. 이천 년 동안 공개되어 있었습니다.","zh":"审判的标准不是秘密。它已公开了两千年。"},"e":{"en":"John 12:48 · Acts 17:31","ko":"요 12:48 · 행 17:31","zh":"约 12:48 · 徒 17:31"}}
+   ]},
+  {"t":"s","v":["act2_33","jn14_26","jn14_2","jn12_48","jn5_22"]},
+  {"t":"h","x":{"en":"Two resurrections","ko":"두 부활","zh":"两种复活"}},
+  {"t":"p","x":{"en":"Jesus does not divide humanity into those who rise and those who stay in the grave. Everyone rises. The dividing line is what they rise into. Same voice, same summons, two destinations.","ko":"예수는 인류를 ‘부활하는 자’와 ‘무덤에 남는 자’로 나누지 않으십니다. 모두가 일어납니다. 갈리는 지점은 ‘무엇으로’ 일어나는가입니다. 같은 음성, 같은 부르심, 그러나 두 개의 목적지입니다.","zh":"耶稣并没有把人分成“复活的”和“留在坟墓里的”。所有人都要复活。分界线在于复活进入什么。同一个声音，同一个呼召，两个归宿。"}},
+  {"t":"dia","kind":"fork",
+   "stem":{"en":"“All who are in the tombs will hear his voice and will come out…”","ko":"“무덤 속에 있는 자가 다 그의 음성을 들을 때가 오나니…”","zh":"“凡在坟墓里的，都要听见他的声音，就出来……”"},
+   "items":[
+    {"b":{"en":"Resurrection of life","ko":"생명의 부활","zh":"复活得生"},
+     "s":{"en":"Those who heard his word and believed the One who sent him have already crossed over — they do not come into judgment at all.","ko":"그의 말씀을 듣고 그를 보내신 이를 믿은 자는 이미 옮겨졌습니다. 그들은 아예 심판에 이르지 않습니다.","zh":"那听祂话、又信差祂来者的，早已出死入生——根本不至于定罪。"},
+     "e":{"en":"John 5:24 · John 11:25","ko":"요 5:24 · 요 11:25","zh":"约 5:24 · 约 11:25"}},
+    {"b":{"en":"Resurrection of judgment","ko":"심판의 부활","zh":"复活定罪"},
+     "s":{"en":"The books are opened and each is repaid according to what he has done — measured against the word that was freely offered and refused.","ko":"책들이 펴지고 각 사람이 행한 대로 갚음을 받습니다. 값없이 주어졌으나 거절된 그 말씀을 기준으로 말입니다.","zh":"案卷展开，各人照所行的受报应——以那白白赐下却被拒绝的话为准绳。"},
+     "e":{"en":"Revelation 20:12 · 22:12","ko":"계 20:12 · 22:12","zh":"启 20:12 · 22:12"}}
+   ]},
+  {"t":"s","v":["jn5_28","jn5_24","act17_31","rev20_12"]},
+  {"t":"mem","ref":"jn12_48"},
+  {"t":"q","items":[
+    {"en":"If we will be judged by words that are already public, what changes about how you read them this week?","ko":"이미 공개된 그 말씀으로 심판을 받는다면, 이번 주에 내가 그 말씀을 읽는 방식은 무엇이 달라져야 합니까?","zh":"如果我们将被那些早已公开的话审判，这一周你读这些话的方式该有什么改变？"},
+    {"en":"John 5:24 says the believer has already passed from death to life. What difference does “already” make to how you face the future?","ko":"요한복음 5:24는 믿는 자가 이미 사망에서 생명으로 옮겨졌다고 말합니다. 이 ‘이미’는 내가 미래를 대하는 태도를 어떻게 바꿉니까?","zh":"约翰福音5:24说信的人已经出死入生。这个“已经”对你面对将来的态度带来什么不同？"}
+  ]}
+ ]
+}
+],
+
+"closing":{
+ "eyebrow":{"en":"The thread","ko":"하나로 꿰는 실","zh":"贯穿的线索"},
+ "title":{"en":"One Word, from beginning to end","ko":"처음부터 끝까지, 하나의 말씀","zh":"从起初到末了，一个道"},
+ "lead":{"en":"Five portraits. Read them together and a single thread runs through all of them.","ko":"다섯 개의 초상. 함께 놓고 보면 그 모두를 관통하는 하나의 실이 보입니다.","zh":"五幅画像。放在一起看，就见到一条贯穿其中的线索。"},
+ "rows":[
+  {"n":"I","b":{"en":"God","ko":"하나님","zh":"神"},"s":{"en":"He is the Word","ko":"그가 곧 말씀이십니다","zh":"祂就是道"},"e":{"en":"John 1:1","ko":"요한복음 1:1","zh":"约翰福音 1:1"}},
+  {"n":"II","b":{"en":"Creator","ko":"창조주","zh":"创造主"},"s":{"en":"He creates by the Word","ko":"말씀으로 창조하십니다","zh":"祂以道创造"},"e":{"en":"Genesis 1:3 · Psalm 33:6","ko":"창세기 1:3 · 시편 33:6","zh":"创 1:3 · 诗 33:6"}},
+  {"n":"III","b":{"en":"Redeemer","ko":"구속자","zh":"救赎主"},"s":{"en":"The Word became flesh","ko":"말씀이 육신이 되셨습니다","zh":"道成了肉身"},"e":{"en":"John 1:14 · Isaiah 63:16","ko":"요한복음 1:14 · 이사야 63:16","zh":"约 1:14 · 赛 63:16"}},
+  {"n":"IV","b":{"en":"King of Kings","ko":"만왕의 왕","zh":"万王之王"},"s":{"en":"He obeyed the Word to death, and was enthroned","ko":"말씀에 죽기까지 순종하시고 보좌에 앉으셨습니다","zh":"祂顺服道直到死，并登上宝座"},"e":{"en":"Philippians 2:8–11","ko":"빌립보서 2:8–11","zh":"腓 2:8–11"}},
+  {"n":"V","b":{"en":"Judge","ko":"심판주","zh":"审判者"},"s":{"en":"He judges by the Word he spoke","ko":"그가 하신 그 말씀으로 심판하십니다","zh":"祂用所讲的道审判"},"e":{"en":"John 12:48","ko":"요한복음 12:48","zh":"约 12:48"}}
+ ],
+ "final":{"en":"Which means the question Jesus asked his disciples is not finally a quiz about doctrine. It is a question about a word: has it been received, or refused?","ko":"그렇다면 예수께서 제자들에게 물으신 그 질문은 결국 교리 시험이 아닙니다. 그것은 한 말씀에 관한 질문입니다 — 그 말씀이 받아들여졌는가, 거절되었는가.","zh":"这意味着耶稣问门徒的那个问题，归根到底不是一场教义测验。它是关乎一句话的问题：那话被领受了，还是被拒绝了？"},
+ "qs":[
+  {"en":"Say it in one sentence, without using any of the five titles: who is Jesus, to you?","ko":"다섯 개의 칭호를 하나도 쓰지 말고, 한 문장으로 말해 보십시오. 나에게 예수는 누구십니까?","zh":"不用这五个名号中的任何一个，用一句话说：对你而言，耶稣是谁？"},
+  {"en":"Which of the five portraits did you already know but had never connected to the others?","ko":"다섯 초상 중, 이미 알고 있었지만 다른 것들과 연결해 본 적이 없던 것은 무엇입니까?","zh":"这五幅画像中，哪一幅是你早已知道，却从未与其他几幅连起来看的？"},
+  {"en":"Name one specific word of Jesus you are currently not obeying. Start there.","ko":"지금 내가 순종하지 않고 있는 예수의 구체적인 말씀 하나를 말해 보십시오. 거기서 시작하십시오.","zh":"说出一句你目前没有顺服的、耶稣具体的话。就从那里开始。"}
+ ]
+},
+
+"hero":{
+ "eyebrow":{"en":"A five-part Bible study","ko":"다섯 과로 이루어진 성경공부","zh":"五课查经"},
+ "title":{"en":"Who Is Jesus?","ko":"예수는 누구신가?","zh":"耶稣是谁？"},
+ "sub":{"en":"Five portraits. One person. One thread running through all of them: the Word.","ko":"다섯 개의 초상, 한 분의 인격. 그리고 그 모두를 관통하는 하나의 실 — 말씀.","zh":"五幅画像，一位主。以及贯穿其中的一条线索——道。"},
+ "greek":"ἐν ἀρχῇ ἦν ὁ λόγος",
+ "intro":{"en":"Jesus once turned a public debate into a personal question. He is still asking it. This study follows five biblical answers in the order Scripture gives them — and watches for the single thread that ties every answer to the next.","ko":"예수께서는 한때 공개 토론을 개인적인 질문으로 바꾸셨습니다. 그는 지금도 그 질문을 하고 계십니다. 이 교재는 성경이 제시하는 순서를 따라 다섯 가지 대답을 살펴보며, 각 대답을 다음 대답과 이어 주는 하나의 실을 함께 추적합니다.","zh":"耶稣曾把一场公开的辩论变成一个个人的问题。祂至今仍在问。本教材按照圣经给出的顺序追踪五个答案，并留意那把每个答案与下一个连接起来的唯一线索。"}
+}
+}
+</script>
+
+<script>
+(function(){
+"use strict";
+var D = JSON.parse(document.getElementById("DATA").textContent);
+var lang = "en";
+var esc = function(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");};
+var L = function(o){ if(!o) return ""; return o[lang] || o.en || ""; };
+
+/* ---------- verse accordion ---------- */
+function scripture(ids){
+  var h = '<p class="hint">'+esc(L(D.ui.tapHint))+'</p><div class="scripture">';
+  ids.forEach(function(id){
+    var v = D.verses[id]; if(!v) return;
+    h += '<div class="sv" data-open="0">'
+      +  '<button type="button" aria-expanded="false"><span class="sv-ref">'+esc(L(v.ref))+'</span><span class="sv-plus" aria-hidden="true"></span></button>'
+      +  '<div class="sv-body"><div class="sv-text">'+esc(L(v.t))+'</div></div></div>';
+  });
+  return h + '</div>';
+}
+
+/* ---------- diagram renderers ---------- */
+var DIA = {
+  clauses:function(d){
+    var h='<div class="clauses">';
+    d.items.forEach(function(it,i){
+      h+='<div class="cl tile"><span class="cl-n">'+(i+1)+'</span><div>'
+       + '<div class="cl-q">'+esc(L(it.q))+'</div><p class="cl-a">'+esc(L(it.a))+'</p>'
+       + '<span class="cl-tag">'+esc(L(it.tag))+'</span></div></div>';
+    });
+    return h+'</div>';
+  },
+  grid:function(d){
+    var h='<div class="gridtiles">';
+    d.items.forEach(function(it){
+      h+='<div class="gt tile"><b>'+esc(L(it.b))+'</b><span>'+esc(L(it.s))+'</span><em>'+esc(L(it.e))+'</em></div>';
+    });
+    return h+'</div>';
+  },
+  formfill:function(d){
+    function col(arr,head){
+      var s='<div class="ff-col"><div class="ff-head">'+esc(L(head))+'</div>';
+      arr.forEach(function(it){ s+='<div class="ff-cell tile"><b>'+esc(L(it.d))+'</b><span>'+esc(L(it.x))+'</span></div>'; });
+      return s+'</div>';
+    }
+    return '<div class="ff">'+col(d.left,d.head[0])+'<div class="ff-arrow">&#8594;</div>'+col(d.right,d.head[1])+'</div>'
+         + '<div class="ff-rest tile">'+esc(L(d.rest))+'</div>';
+  },
+  eq:function(d){
+    var h='<div class="eq">';
+    d.items.forEach(function(it,i){
+      h+='<div class="eq-term tile"><b>'+esc(L(it.b))+'</b><span>'+esc(L(it.s))+'</span></div>';
+      if(it.op) h+='<div class="eq-op">'+it.op+'</div>';
+    });
+    return h+'</div>';
+  },
+  chk:function(d){
+    var h='<div class="chk">';
+    d.items.forEach(function(it){
+      h+='<div class="ck tile"><span class="ck-mark">&#10003;</span><div><b>'+esc(L(it.b))+'</b><span>'+esc(L(it.s))+'</span><em>'+esc(L(it.e))+'</em></div></div>';
+    });
+    return h+'</div>';
+  },
+  cmp:function(d){
+    var h='<div class="cmp">';
+    d.heads.forEach(function(hd){ h+='<div class="cmp-head tile">'+esc(L(hd.b))+'<small>'+esc(L(hd.s))+'</small></div>'; });
+    d.rows.forEach(function(r){
+      h+='<div class="cmp-label">'+esc(L(r.label))+'</div>';
+      h+='<div class="cmp-row tile">'+esc(L(r.l))+'</div><div class="cmp-row tile">'+esc(L(r.r))+'</div>';
+    });
+    return h+'</div>';
+  },
+  stair:function(d){
+    var h='<div class="ff-head">'+esc(L(d.downHead))+'</div><div class="stair">';
+    d.down.forEach(function(s,i){
+      var pad = 6 + i*14;
+      h+='<div class="st tile" style="margin-left:'+Math.min(pad,68)+'px"><i>'+(i+1)+'</i><span>'+esc(L(s))+'</span></div>';
+    });
+    h+='</div><div class="hinge">'+esc(L(d.hinge))+'</div>';
+    h+='<div class="ff-head">'+esc(L(d.upHead))+'</div><div class="stair">';
+    d.up.forEach(function(s,i){
+      var pad = 54 - i*16;
+      h+='<div class="st tile" style="margin-left:'+Math.max(pad,0)+'px"><i>'+(i+1)+'</i><span>'+esc(L(s))+'</span></div>';
+    });
+    return h+'</div>';
+  },
+  tl:function(d){
+    var h='<div class="tl">';
+    d.items.forEach(function(it){
+      h+='<div class="tlx"><b>'+esc(L(it.b))+'</b><span>'+esc(L(it.s))+'</span><em>'+esc(L(it.e))+'</em></div>';
+    });
+    return h+'</div>';
+  },
+  fork:function(d){
+    var h='<div class="fork-stem tile">'+esc(L(d.stem))+'</div><div class="fork">';
+    d.items.forEach(function(it){
+      h+='<div class="fk tile"><b>'+esc(L(it.b))+'</b><span>'+esc(L(it.s))+'</span><em>'+esc(L(it.e))+'</em></div>';
+    });
+    return h+'</div>';
+  }
+};
+
+function block(b){
+  if(b.t==="p") return '<p>'+esc(L(b.x))+'</p>';
+  if(b.t==="h") return '<h3>'+esc(L(b.x))+'</h3>';
+  if(b.t==="callout") return '<div class="callout">'+esc(L(b.x))+'</div>';
+  if(b.t==="s") return scripture(b.v);
+  if(b.t==="dia"){
+    var t = b.title ? '<div class="dia-t">'+esc(L(b.title))+'</div>' : '';
+    return '<div class="dia reveal">'+t+(DIA[b.kind]?DIA[b.kind](b):'')+'</div>';
+  }
+  if(b.t==="mem"){
+    var v = D.verses[b.ref];
+    return '<div class="memory"><div class="hint">'+esc(L(D.ui.memory))+'</div><q>'+esc(L(v.t))+'</q><cite>'+esc(L(v.ref))+'</cite></div>';
+  }
+  if(b.t==="q"){
+    var h='<h3>'+esc(L(D.ui.questions))+'</h3><ul class="qs">';
+    b.items.forEach(function(q){ h+='<li>'+esc(L(q))+'</li>'; });
+    return h+'</ul>';
+  }
+  return '';
+}
+
+function render(){
+  document.documentElement.lang = lang;
+  document.getElementById("brand").textContent = L(D.ui.brand);
+  document.getElementById("foot").innerHTML = '<b>'+esc(L(D.hero.title))+'</b><br>'+esc(L(D.ui.footer));
+
+  var h = '';
+  /* hero */
+  h += '<section class="field" id="top" style="--field:#14161C;--fg:#F2EFE7">'
+     + '<div class="wrap">'
+     + '<p class="eyebrow">'+esc(L(D.hero.eyebrow))+'</p>'
+     + '<div style="font-family:var(--display);font-weight:300;font-size:clamp(1.1rem,3.2vw,1.6rem);opacity:.5;letter-spacing:.02em;margin-bottom:1.6rem">'+D.hero.greek+'</div>'
+     + '<h1>'+esc(L(D.hero.title))+'</h1>'
+     + '<p class="lead" style="color:#E9C46A;max-width:34ch">'+esc(L(D.hero.sub))+'</p>'
+     + '<hr class="hairline">'
+     + '<p style="max-width:56ch">'+esc(L(D.hero.intro))+'</p>'
+     + scripture(["mt16_15"])
+     + '</div></section>';
+
+  /* sections */
+  D.sections.forEach(function(s){
+    h += '<section class="field" id="'+s.id+'" style="--field:'+s.field+';--fg:'+s.fg+'"><div class="wrap">'
+       + '<span class="numeral">'+s.numeral+'</span>'
+       + '<div class="thread-tag"><i></i>'+esc(L(s.thread))+'</div>'
+       + '<h2>'+esc(L(s.title))+'</h2>'
+       + '<p class="lead">'+esc(L(s.lead))+'</p>'
+       + '<hr class="hairline">';
+    s.blocks.forEach(function(b){ h += block(b); });
+    h += '</div></section>';
+  });
+
+  /* closing */
+  var c = D.closing;
+  h += '<section class="field" id="thread" style="--field:#F1E9DA;--fg:#1B1B1F"><div class="wrap">'
+     + '<p class="eyebrow">'+esc(L(c.eyebrow))+'</p>'
+     + '<h2>'+esc(L(c.title))+'</h2>'
+     + '<p class="lead">'+esc(L(c.lead))+'</p>'
+     + '<hr class="hairline"><div class="recap">';
+  c.rows.forEach(function(r){
+    h += '<div class="rc tile"><i>'+r.n+'</i><div><b>'+esc(L(r.b))+'</b><span>'+esc(L(r.s))+'</span><em>'+esc(L(r.e))+'</em></div></div>';
+  });
+  h += '</div><div class="callout">'+esc(L(c.final))+'</div>'
+     + '<h3>'+esc(L(D.ui.questions))+'</h3><ul class="qs">';
+  c.qs.forEach(function(q){ h+='<li>'+esc(L(q))+'</li>'; });
+  h += '</ul></div></section>';
+
+  document.getElementById("app").innerHTML = h;
+
+  /* rail */
+  var rail = D.sections.map(function(s){
+    return '<li data-sec="'+s.id+'" style="--dot:'+s.dot+'"><a href="#'+s.id+'">'+esc(L(s.title))+'</a></li>';
+  }).join("");
+  document.getElementById("rail").innerHTML = rail;
+
+  wire();
+}
+
+function wire(){
+  /* accordion */
+  document.querySelectorAll(".sv > button").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var sv = btn.parentNode, body = sv.querySelector(".sv-body");
+      var open = sv.getAttribute("data-open")==="1";
+      sv.setAttribute("data-open", open?"0":"1");
+      btn.setAttribute("aria-expanded", open?"false":"true");
+      body.style.maxHeight = open ? "0px" : (body.scrollHeight+16)+"px";
+    });
+  });
+
+  /* reveal */
+  if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target);} });
+    },{threshold:.12});
+    document.querySelectorAll(".reveal").forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll(".reveal").forEach(function(el){ el.classList.add("in"); });
+  }
+
+  /* scroll spy */
+  var secs = D.sections.map(function(s){ return document.getElementById(s.id); }).filter(Boolean);
+  var items = Array.prototype.slice.call(document.querySelectorAll("#rail li"));
+  var prog = document.getElementById("prog");
+  function onScroll(){
+    var y = window.scrollY || window.pageYOffset;
+    var docH = document.body.scrollHeight - window.innerHeight;
+    prog.style.width = (docH>0 ? Math.min(100,(y/docH)*100) : 0) + "%";
+    var active = -1;
+    secs.forEach(function(el,i){ if(el && el.offsetTop <= y + window.innerHeight*0.35) active = i; });
+    items.forEach(function(li,i){
+      li.setAttribute("data-on", i===active ? "1":"0");
+    });
+    if(active>=0) prog.style.color = D.sections[active].dot;
+    else prog.style.color = "#E9C46A";
+  }
+  window.removeEventListener("scroll", window.__spy || function(){});
+  window.__spy = onScroll;
+  window.addEventListener("scroll", onScroll, {passive:true});
+  onScroll();
+}
+
+/* language buttons */
+document.querySelectorAll(".langs button").forEach(function(b){
+  b.addEventListener("click", function(){
+    lang = b.getAttribute("data-lang");
+    document.querySelectorAll(".langs button").forEach(function(x){
+      x.setAttribute("aria-pressed", x===b ? "true":"false");
+    });
+    var y = window.scrollY;
+    render();
+    window.scrollTo(0,y);
+  });
+});
+
+render();
+})();
+</script>
+</body>
+</html>
