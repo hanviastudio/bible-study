@@ -270,6 +270,18 @@ footer b{color:#C9C2B4;font-weight:500}
   .tthread{max-width:none}
 }
 
+/* attributes-of-God grid: balanced 4-up, icons, pill references */
+.gridtiles{grid-template-columns:repeat(4,1fr);gap:.6rem}
+@media(max-width:900px){.gridtiles{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.gridtiles{grid-template-columns:1fr}}
+.gt{display:flex;flex-direction:column;padding:1.2rem 1.15rem}
+.gt-ic{width:26px;height:26px;color:var(--mark);margin-bottom:.75rem}
+.gt-ic svg{width:100%;height:100%;display:block}
+.gt b{margin-bottom:.35rem}
+.gt span{flex:1 1 auto}
+.gt em{display:inline-block;align-self:flex-start;margin-top:.85rem;padding:.24rem .6rem;
+  border:1px solid color-mix(in srgb,var(--dot,#E9C46A) 42%,transparent);border-radius:999px;opacity:.85}
+
 /* closing recap: colour node + icon */
 .recap .rc{grid-template-columns:34px 1.7rem 1fr;align-items:center;gap:.85rem}
 .rc.tile{border-left:3px solid var(--mark)}
@@ -627,6 +639,22 @@ var ICON = function(id){
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(P[id]||'')+'</svg>';
 };
 
+/* icons for the attributes-of-God grid (keyed on the English label) */
+var ATTR_IC = {
+  "Eternal":'<path d="M20.5 12a8.5 8.5 0 1 1-2.4-5.9"/><path d="M20.5 4v4.2h-4.2"/>',
+  "All-powerful":'<path d="M13 2 4.5 13.5H10l-1 8.5L19.5 10H13z"/>',
+  "All-knowing":'<path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.6"/>',
+  "Everywhere present":'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 2.6 15.4 0 18M12 3c-2.6 2.6-2.6 15.4 0 18"/>',
+  "Unchanging":'<circle cx="12" cy="5" r="2.2"/><path d="M12 7.2V21M6 13a6 6 0 0 0 12 0M4 13h2M18 13h2"/>',
+  "Holy":'<path d="M12 2.5c.6 3.4 3.7 4.8 3.7 8.5a3.7 3.7 0 0 1-7.4 0c0-1.3.5-2.2.9-2.8.3 1 .9 1.6 1.7 1.6 1.1 0 1.6-1 1.1-2.3-.5-1.4-.3-3 0-4z"/>',
+  "Love":'<path d="M12 20.5c-1-1-8-5.5-8-11A4.3 4.3 0 0 1 12 6.6 4.3 4.3 0 0 1 20 9.5c0 5.5-7 10-8 11z"/>',
+  "Glory":'<circle cx="12" cy="12" r="3.6"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.2 5.2l1.8 1.8M17 17l1.8 1.8M18.8 5.2 17 7M7 17l-1.8 1.8"/>'
+};
+var attrIcon = function(en){
+  var p = ATTR_IC[en]; if(!p) return '';
+  return '<span class="gt-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg></span>';
+};
+
 /* ---------- overview infographic: five portraits, one thread ---------- */
 var TMAP_T = {en:"The five portraits — one thread",ko:"다섯 개의 초상 — 하나의 실",zh:"五幅画像 — 一条线索"};
 function threadmap(){
@@ -667,7 +695,7 @@ var DIA = {
   grid:function(d){
     var h='<div class="gridtiles">';
     d.items.forEach(function(it){
-      h+='<div class="gt tile"><b>'+esc(L(it.b))+'</b><span>'+esc(L(it.s))+'</span><em>'+esc(L(it.e))+'</em></div>';
+      h+='<div class="gt tile">'+attrIcon(it.b&&it.b.en)+'<b>'+esc(L(it.b))+'</b><span>'+esc(L(it.s))+'</span><em>'+esc(L(it.e))+'</em></div>';
     });
     return h+'</div>';
   },
