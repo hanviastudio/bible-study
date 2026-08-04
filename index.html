@@ -219,6 +219,12 @@ footer b{color:#C9C2B4;font-weight:500}
 /* per-section accent, auto-contrasted against the field colour */
 .field{--mark:color-mix(in srgb,var(--dot,#E9C46A) 62%,var(--fg))}
 
+/* top-bar current-portrait indicator */
+.brand{display:flex;align-items:center;gap:.55rem;min-width:0}
+.cur-dot{flex:none;width:9px;height:9px;border-radius:50%;background:transparent;opacity:0;
+  transition:background .3s ease,opacity .3s ease;box-shadow:0 0 0 3px rgba(255,255,255,.04)}
+#curText{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .25s ease}
+
 /* section header with icon */
 .sec-head{display:flex;align-items:flex-start;gap:clamp(.7rem,2.2vw,1.15rem);margin-bottom:.2rem}
 .sec-ic{flex:none;width:clamp(42px,7.5vw,60px);height:clamp(42px,7.5vw,60px);color:var(--mark)}
@@ -293,7 +299,7 @@ footer b{color:#C9C2B4;font-weight:500}
 <body>
 
 <header class="bar">
-  <div class="brand" id="brand">Who Is Jesus? — Five Portraits, One Word</div>
+  <div class="brand" id="brand"><span class="cur-dot" id="curDot"></span><span id="curText">Who Is Jesus? — Five Portraits, One Word</span></div>
   <nav class="langs" aria-label="Language">
     <button data-lang="en" aria-pressed="true">EN</button>
     <button data-lang="ko" aria-pressed="false">한국어</button>
@@ -785,7 +791,7 @@ function block(b){
 
 function render(){
   document.documentElement.lang = lang;
-  document.getElementById("brand").textContent = L(D.ui.brand);
+  document.getElementById("curText").textContent = L(D.ui.brand);
   document.getElementById("foot").innerHTML = '<b>'+esc(L(D.hero.title))+'</b><br>'+esc(L(D.ui.footer));
 
   var h = '';
@@ -868,6 +874,15 @@ function wire(){
   var secs = D.sections.map(function(s){ return document.getElementById(s.id); }).filter(Boolean);
   var items = Array.prototype.slice.call(document.querySelectorAll("#rail li"));
   var prog = document.getElementById("prog");
+  var curDot = document.getElementById("curDot");
+  var curText = document.getElementById("curText");
+  var brandTitle = L(D.ui.brand);
+  /* labels for the top-bar indicator, incl. the closing section */
+  var marks = D.sections.map(function(s){
+    return {el:document.getElementById(s.id), dot:s.dot, label:s.numeral+" · "+L(s.title)};
+  });
+  var closeEl = document.getElementById("thread");
+  if(closeEl) marks.push({el:closeEl, dot:"#C6912E", label:L(D.closing.eyebrow)});
   function onScroll(){
     var y = window.scrollY || window.pageYOffset;
     var docH = document.body.scrollHeight - window.innerHeight;
@@ -879,6 +894,17 @@ function wire(){
     });
     if(active>=0) prog.style.color = D.sections[active].dot;
     else prog.style.color = "#E9C46A";
+    /* top-bar current-portrait indicator (tracks sections + closing) */
+    var cur = -1;
+    marks.forEach(function(m,i){ if(m.el && m.el.offsetTop <= y + window.innerHeight*0.35) cur = i; });
+    if(cur>=0){
+      curDot.style.background = marks[cur].dot;
+      curDot.style.opacity = "1";
+      curText.textContent = marks[cur].label;
+    } else {
+      curDot.style.opacity = "0";
+      curText.textContent = brandTitle;
+    }
   }
   window.removeEventListener("scroll", window.__spy || function(){});
   window.__spy = onScroll;
