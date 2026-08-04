@@ -293,7 +293,38 @@ footer b{color:#C9C2B4;font-weight:500}
 .rc.tile{border-left:3px solid var(--mark)}
 .rc .sec-ic{width:32px;height:32px}
 
-@media(prefers-reduced-motion:reduce){.tnode,.tile,.tdot{transition:none!important}}
+/* ===== richer motion: titles, icons, overview ===== */
+/* section titles rise out of a soft blur */
+.field h2.reveal{transform:translateY(26px) scale(.985);filter:blur(8px);
+  transition:opacity .85s ease, transform .85s cubic-bezier(.2,.7,.25,1), filter .85s ease;transition-delay:.1s}
+.field h2.reveal.in{transform:none;filter:blur(0)}
+.field .lead.reveal{transition-delay:.2s}
+
+/* the portrait icon draws itself in */
+.sec-head .sec-ic svg [pathLength]{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.05s ease .15s}
+.sec-head.in .sec-ic svg [pathLength]{stroke-dashoffset:0}
+/* attribute-grid icons draw in with their tiles */
+.gt-ic svg [pathLength]{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .85s ease}
+.dia.in .gt-ic svg [pathLength]{stroke-dashoffset:0}
+
+/* overview map nodes cascade in */
+.tmap-track .tnode{opacity:0;transform:translateY(16px);
+  transition:opacity .55s ease, transform .55s cubic-bezier(.2,.7,.2,1)}
+.tmap.in .tmap-track .tnode{opacity:1;transform:none}
+.tmap.in .tnode:nth-child(1){transition-delay:.06s}
+.tmap.in .tnode:nth-child(2){transition-delay:.14s}
+.tmap.in .tnode:nth-child(3){transition-delay:.22s}
+.tmap.in .tnode:nth-child(4){transition-delay:.30s}
+.tmap.in .tnode:nth-child(5){transition-delay:.38s}
+
+/* hero title entrance on load */
+#top h1{animation:heroRise 1s cubic-bezier(.2,.7,.2,1) both}
+#top .lead{animation:heroRise 1s cubic-bezier(.2,.7,.2,1) .15s both}
+@keyframes heroRise{from{opacity:0;transform:translateY(26px);filter:blur(7px)}to{opacity:1;transform:none;filter:blur(0)}}
+
+@media(prefers-reduced-motion:reduce){.tnode,.tile,.tdot{transition:none!important}
+  .field h2.reveal,.tmap-track .tnode,#top h1,#top .lead{filter:none!important;transform:none!important;animation:none!important}
+  .sec-head .sec-ic svg [pathLength],.gt-ic svg [pathLength]{stroke-dashoffset:0!important}}
 </style>
 </head>
 <body>
@@ -634,6 +665,8 @@ var esc = function(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"
 var L = function(o){ if(!o) return ""; return o[lang] || o.en || ""; };
 
 /* ---------- portrait icons (language-independent) ---------- */
+/* normalise every stroke path to length 1 so it can "draw itself" via CSS */
+var pl = function(s){ return s.replace(/<(path|circle|rect|line|polyline|polygon) /g,'<$1 pathLength="1" '); };
 var ICON = function(id){
   var P = {
     god:'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M19.4 4.6l-2.1 2.1M6.7 17.3l-2.1 2.1"/>',
@@ -642,7 +675,7 @@ var ICON = function(id){
     king:'<path d="M4 18h16M4 18l-1.2-8.6 4.8 3.5L12 6l4.4 6.9 4.8-3.5L20 18"/>',
     judge:'<path d="M12 4v16M7 20h10M4.5 7.5h15M12 4l-7.5 3.5M12 4l7.5 3.5M4.5 7.5l-2 4.2a2.6 2.6 0 0 0 4 0zM19.5 7.5l-2 4.2a2.6 2.6 0 0 0 4 0z"/>'
   };
-  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(P[id]||'')+'</svg>';
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+pl(P[id]||'')+'</svg>';
 };
 
 /* icons for the attributes-of-God grid (keyed on the English label) */
@@ -658,7 +691,7 @@ var ATTR_IC = {
 };
 var attrIcon = function(en){
   var p = ATTR_IC[en]; if(!p) return '';
-  return '<span class="gt-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg></span>';
+  return '<span class="gt-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+pl(p)+'</svg></span>';
 };
 
 /* ---------- overview infographic: five portraits, one thread ---------- */
@@ -823,10 +856,10 @@ function render(){
 
   /* closing */
   var c = D.closing;
-  h += '<section class="field" id="thread" style="--field:#F1E9DA;--fg:#1B1B1F"><div class="wrap">'
-     + '<p class="eyebrow">'+esc(L(c.eyebrow))+'</p>'
-     + '<h2>'+esc(L(c.title))+'</h2>'
-     + '<p class="lead">'+esc(L(c.lead))+'</p>'
+  h += '<section class="field" id="thread" style="--field:#F1E9DA;--fg:#1B1B1F;--dot:#C6912E"><div class="wrap">'
+     + '<p class="eyebrow reveal">'+esc(L(c.eyebrow))+'</p>'
+     + '<h2 class="reveal">'+esc(L(c.title))+'</h2>'
+     + '<p class="lead reveal">'+esc(L(c.lead))+'</p>'
      + '<hr class="hairline"><div class="recap">';
   c.rows.forEach(function(r,i){
     var sec = D.sections[i] || {};
